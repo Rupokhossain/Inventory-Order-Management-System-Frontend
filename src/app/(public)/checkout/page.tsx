@@ -75,8 +75,8 @@ export default function CheckoutPage() {
         password: "siam11**##@@AA",
       });
 
-      const customerUser = res?.data?.user || res?.data;
-      const token = res?.data?.accessToken || res?.data?.token;
+      const customerUser = res?.data?.user || (res?.data as any);
+      const token = res?.data?.accessToken || (res?.data as any)?.token;
 
       setAuth(customerUser, token);
 

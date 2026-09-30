@@ -15,10 +15,9 @@ export const apiClient = ofetch.create({
   onRequest({ options }) {
     const token = getCookie("accessToken");
     if (token) {
-      options.headers = {
-        ...options.headers,
-        Authorization: `Bearer ${token}`,
-      };
+      const headers = new Headers(options.headers);
+      headers.set("Authorization", `Bearer ${token}`);
+      options.headers = headers;
     }
   },
 });

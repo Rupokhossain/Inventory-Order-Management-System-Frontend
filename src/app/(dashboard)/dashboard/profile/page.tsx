@@ -27,10 +27,10 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 export default function CustomerProfilePage() {
-  const { user, setUser } = useAuthStore();
+  const { user } = useAuthStore();
 
   const [name, setName] = useState(user?.name || "");
-  const [profileImg, setProfileImg] = useState(user?.profileImg || "");
+  const [profileImg, setProfileImg] = useState((user as any)?.profileImg || user?.avatar || "");
   const [shippingAddress, setShippingAddress] = useState(
     "Flat 4B, Road 12, Banani, Dhaka-1213, Bangladesh"
   );
@@ -46,7 +46,9 @@ export default function CustomerProfilePage() {
 
   useEffect(() => {
     if (user?.name) setName(user.name);
-    if (user?.profileImg) setProfileImg(user.profileImg);
+    if ((user as any)?.profileImg || user?.avatar) {
+      setProfileImg((user as any)?.profileImg || user?.avatar || "");
+    }
   }, [user]);
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
@@ -58,10 +60,7 @@ export default function CustomerProfilePage() {
 
     try {
       setIsUpdatingProfile(true);
-      const updated = await authService.updateProfile({ name, profileImg });
-      if (user) {
-        setUser({ ...user, name, profileImg });
-      }
+      await authService.updateProfile({ name, profileImg });
       toast.success("Profile information updated successfully!");
     } catch (err: any) {
       toast.error(err?.message || "Failed to update profile");
