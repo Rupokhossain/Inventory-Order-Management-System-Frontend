@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { authService } from "@/services/auth.service";
 import {
@@ -19,6 +19,11 @@ import {
   CreditCard,
   Eye,
   EyeOff,
+  Upload,
+  Camera,
+  Trash2,
+  Link as LinkIcon,
+  Image as ImageIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -27,10 +32,14 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 export default function CustomerProfilePage() {
-  const { user } = useAuthStore();
+  const { user, token, setAuth } = useAuthStore();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [name, setName] = useState(user?.name || "");
-  const [profileImg, setProfileImg] = useState((user as any)?.profileImg || user?.avatar || "");
+  const [profileImg, setProfileImg] = useState(
+    (user as any)?.profileImg || user?.avatar || ""
+  );
+  const [uploadMode, setUploadMode] = useState<"file" | "url">("file");
   const [shippingAddress, setShippingAddress] = useState(
     "Flat 4B, Road 12, Banani, Dhaka-1213, Bangladesh"
   );
@@ -51,19 +60,64 @@ export default function CustomerProfilePage() {
     }
   }, [user]);
 
+  // Handle local file selection
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select a valid image file (PNG, JPG, WEBP)");
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Image file size must be less than 2MB");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        setProfileImg(reader.result);
+        toast.success("Image loaded! Click 'Save Profile Details' to apply.");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
-      toast.error("Name cannot be empty");
+      toast.error("Full name cannot be empty");
       return;
     }
 
     try {
       setIsUpdatingProfile(true);
-      await authService.updateProfile({ name, profileImg });
-      toast.success("Profile information updated successfully!");
+      const res = await authService.updateProfile({
+        name: name.trim(),
+        profileImg: profileImg || undefined,
+      });
+
+      const updated = res?.data || res;
+
+      // Update Zustand and cookies immediately
+      if (user && token) {
+        setAuth(
+          {
+            ...user,
+            name: updated?.name || name.trim(),
+            avatar: updated?.profileImg || profileImg,
+          },
+          token
+        );
+      }
+
+      toast.success("Profile information and avatar updated successfully!");
     } catch (err: any) {
-      toast.error(err?.message || "Failed to update profile");
+      toast.error(
+        err?.message || "Failed to update profile. Please verify your connection."
+      );
     } finally {
       setIsUpdatingProfile(false);
     }
@@ -87,7 +141,7 @@ export default function CustomerProfilePage() {
     try {
       setIsChangingPassword(true);
       await authService.changePassword({ oldPassword, newPassword });
-      toast.success("Password changed successfully!");
+      toast.success("Security password updated successfully!");
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
@@ -108,7 +162,7 @@ export default function CustomerProfilePage() {
             Account & Profile Settings
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-            Manage your personal identity, shipping addresses, and security preferences.
+            Manage your personal identity, avatar image, shipping addresses, and security credentials.
           </p>
         </div>
       </div>
@@ -128,7 +182,7 @@ export default function CustomerProfilePage() {
                     Personal Information
                   </h2>
                   <p className="text-[11px] text-muted-foreground">
-                    Update your legal name and public avatar.
+                    Update your legal name and profile picture.
                   </p>
                 </div>
               </div>
@@ -137,13 +191,123 @@ export default function CustomerProfilePage() {
               </Badge>
             </div>
 
-            <form onSubmit={handleUpdateProfile} className="space-y-4">
+            <form onSubmit={handleUpdateProfile} className="space-y-5">
+              {/* Photo Upload Section */}
+              <div className="space-y-2 p-4 rounded-xl border border-border/80 bg-muted/20">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                    <Camera className="h-3.5 w-3.5 text-primary" />
+                    Profile Picture / Avatar
+                  </label>
+                  <div className="flex items-center gap-1 text-[11px]">
+                    <button
+                      type="button"
+                      onClick={() => setUploadMode("file")}
+                      className={`px-2 py-0.5 rounded font-semibold transition-colors ${
+                        uploadMode === "file"
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      Device File
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setUploadMode("url")}
+                      className={`px-2 py-0.5 rounded font-semibold transition-colors ${
+                        uploadMode === "url"
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      Image URL
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center gap-4 pt-1">
+                  {/* Photo Thumbnail */}
+                  <div className="relative h-16 w-16 rounded-full border-2 border-primary/20 overflow-hidden bg-muted flex items-center justify-center shrink-0 shadow-xs">
+                    {profileImg ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={profileImg}
+                        alt="Profile Preview"
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <span className="font-bold text-primary text-lg">
+                        {name ? name.slice(0, 2).toUpperCase() : "US"}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex-1 w-full space-y-2">
+                    {uploadMode === "file" ? (
+                      <div className="flex flex-wrap items-center gap-2">
+                        {/* Hidden Native File Input */}
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileChange}
+                          className="hidden"
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => fileInputRef.current?.click()}
+                          className="gap-2 text-xs font-semibold bg-background shadow-2xs hover:bg-muted"
+                        >
+                          <Upload className="h-3.5 w-3.5 text-primary" />
+                          <span>Choose Image from Computer</span>
+                        </Button>
+
+                        {profileImg && (
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setProfileImg("")}
+                            className="text-xs text-rose-500 hover:text-rose-600 hover:bg-rose-500/10 gap-1 h-8 px-2"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                            <span>Remove</span>
+                          </Button>
+                        )}
+                        <span className="text-[10px] text-muted-foreground block w-full">
+                          Supports PNG, JPG, or WEBP (Max 2MB).
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="space-y-1">
+                        <div className="relative">
+                          <LinkIcon className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+                          <Input
+                            placeholder="https://images.unsplash.com/photo-..."
+                            value={profileImg}
+                            onChange={(e) => setProfileImg(e.target.value)}
+                            className="pl-8 text-xs bg-background"
+                          />
+                        </div>
+                        <span className="text-[10px] text-muted-foreground">
+                          Paste a public direct image link.
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Name & Email */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold text-foreground">
-                    Full Legal Name
+                    Full Legal Name *
                   </label>
                   <Input
+                    required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Enter full name"
@@ -169,24 +333,12 @@ export default function CustomerProfilePage() {
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">
-                  Avatar Image URL (Optional)
-                </label>
-                <Input
-                  value={profileImg}
-                  onChange={(e) => setProfileImg(e.target.value)}
-                  placeholder="https://images.unsplash.com/..."
-                  className="text-xs bg-background"
-                />
-              </div>
-
               <div className="pt-2 flex justify-end">
                 <Button
                   type="submit"
                   size="sm"
                   disabled={isUpdatingProfile}
-                  className="gap-2 text-xs font-semibold"
+                  className="gap-2 text-xs font-semibold shadow-xs"
                 >
                   <Save className="h-3.5 w-3.5" />
                   {isUpdatingProfile ? "Saving..." : "Save Profile Details"}
@@ -323,7 +475,7 @@ export default function CustomerProfilePage() {
                   type="submit"
                   size="sm"
                   disabled={isChangingPassword}
-                  className="gap-2 text-xs font-semibold bg-amber-600 hover:bg-amber-700 text-white"
+                  className="gap-2 text-xs font-semibold bg-amber-600 hover:bg-amber-700 text-white shadow-xs"
                 >
                   <KeyRound className="h-3.5 w-3.5" />
                   {isChangingPassword ? "Updating..." : "Update Security Credentials"}
@@ -337,22 +489,24 @@ export default function CustomerProfilePage() {
         <div className="space-y-6">
           {/* Identity Card */}
           <div className="bg-card rounded-xl border border-border/80 shadow-xs p-5 space-y-4 text-center">
-            <div className="relative mx-auto w-20 h-20 rounded-full bg-primary/10 border-2 border-primary/20 flex items-center justify-center text-primary font-black text-2xl shadow-inner">
+            <div className="relative mx-auto w-20 h-20 rounded-full bg-primary/10 border-2 border-primary/20 flex items-center justify-center text-primary font-black text-2xl shadow-inner overflow-hidden">
               {profileImg ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={profileImg}
-                  alt={user?.name || "Avatar"}
-                  className="w-full h-full rounded-full object-cover"
+                  alt={name || "Avatar"}
+                  className="w-full h-full object-cover"
                 />
               ) : (
-                user?.name?.slice(0, 2).toUpperCase() || "US"
+                name?.slice(0, 2).toUpperCase() || "US"
               )}
               <span className="absolute bottom-0 right-0 h-4 w-4 rounded-full bg-emerald-500 border-2 border-card" />
             </div>
 
             <div>
-              <h3 className="font-bold text-base text-foreground">{user?.name || "Customer User"}</h3>
+              <h3 className="font-bold text-base text-foreground">
+                {name || user?.name || "Customer User"}
+              </h3>
               <p className="text-xs text-muted-foreground">{user?.email}</p>
               <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary border border-primary/20">
                 <Sparkles className="h-3 w-3" />

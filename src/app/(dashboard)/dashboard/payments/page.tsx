@@ -32,12 +32,13 @@ export default function CustomerPaymentsPage() {
     queryFn: () => paymentService.getMyPayments(),
   });
 
-  const payments: PaymentItem[] = Array.isArray(response?.data)
-    ? response.data
-    : Array.isArray(response?.data?.data)
-    ? response.data.data
+  const rawData: any = response?.data;
+  const payments: PaymentItem[] = Array.isArray(rawData)
+    ? rawData
+    : Array.isArray(rawData?.data)
+    ? rawData.data
     : Array.isArray(response)
-    ? response
+    ? (response as any)
     : [];
 
   const copyToClipboard = (text: string) => {

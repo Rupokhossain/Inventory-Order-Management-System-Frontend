@@ -18,14 +18,14 @@ export const authService = {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async getProfile(): Promise<any> {
-    const res = await apiClient<any>("/user/me", {
+    const res = await apiClient<any>("/users/me", {
       method: "GET",
     });
     return res.data || res;
   },
 
   async updateProfile(data: { name?: string; profileImg?: string }): Promise<any> {
-    const res = await apiClient<any>("/user/me", {
+    const res = await apiClient<any>("/users/me", {
       method: "PATCH",
       body: data,
     });
@@ -33,7 +33,7 @@ export const authService = {
   },
 
   async changePassword(data: { oldPassword: string; newPassword: string }): Promise<any> {
-    const res = await apiClient<any>("/user/change-password", {
+    const res = await apiClient<any>("/users/change-password", {
       method: "PATCH",
       body: data,
     });
