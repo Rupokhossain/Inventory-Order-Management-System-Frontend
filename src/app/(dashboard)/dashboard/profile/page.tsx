@@ -60,31 +60,33 @@ export default function CustomerProfilePage() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
 
-  // Sync state when fresh profile data arrives from DB
+  // Sync form state when fresh profile data arrives from DB
   useEffect(() => {
     const freshUser = profileResponse?.data || profileResponse;
     if (freshUser && freshUser.id) {
       if (freshUser.name) setName(freshUser.name);
       if (freshUser.profileImg) setProfileImg(freshUser.profileImg);
-      if (token) {
-        setAuth(
+
+      // Silently sync auth store only if values differ from database
+      const currentStoreUser = useAuthStore.getState().user;
+      const currentToken = useAuthStore.getState().token;
+      if (
+        currentToken &&
+        currentStoreUser &&
+        (currentStoreUser.name !== freshUser.name ||
+          currentStoreUser.avatar !== freshUser.profileImg)
+      ) {
+        useAuthStore.getState().setAuth(
           {
-            id: freshUser.id,
-            name: freshUser.name || "Customer User",
-            email: freshUser.email,
-            role: freshUser.role || "CUSTOMER",
-            avatar: freshUser.profileImg,
+            ...currentStoreUser,
+            name: freshUser.name || currentStoreUser.name,
+            avatar: freshUser.profileImg || currentStoreUser.avatar,
           },
-          token
+          currentToken
         );
       }
-    } else if (user) {
-      if (user.name) setName(user.name);
-      if ((user as any)?.profileImg || user?.avatar) {
-        setProfileImg((user as any)?.profileImg || user?.avatar || "");
-      }
     }
-  }, [profileResponse, user, token, setAuth]);
+  }, [profileResponse]);
 
   // Handle local file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
