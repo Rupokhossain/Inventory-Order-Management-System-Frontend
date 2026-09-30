@@ -45,21 +45,22 @@ export const paymentService = {
   },
 
   getMyPayments: async (params?: Record<string, any>) => {
-    const res = await apiClient<{
-      success: boolean;
-      message: string;
-      data: PaymentItem[];
-      meta: {
-        page: number;
-        limit: number;
-        total: number;
-        totalPage: number;
-      };
-    }>("/payments/my-payments", {
+    const res = await apiClient<any>("/payments/my-payments", {
       method: "GET",
       query: params,
     });
-    return res;
+    const payments: PaymentItem[] = Array.isArray(res?.data)
+      ? res.data
+      : Array.isArray(res?.data?.data)
+      ? res.data.data
+      : [];
+    const meta = res?.data?.meta || {
+      page: 1,
+      limit: 10,
+      total: payments.length,
+      totalPage: 1,
+    };
+    return { data: payments, meta };
   },
 
   getSinglePayment: async (paymentId: string) => {
