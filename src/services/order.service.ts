@@ -26,12 +26,24 @@ export const orderService = {
     return res?.data?.data || res?.data || res;
   },
 
-  async getMyOrders(params?: { page?: number; limit?: number; status?: string }) {
+  async getMyOrders(params?: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    sortBy?: string;
+    sortOrder?: string;
+  }) {
     const res = await apiClient<any>("/orders/my-orders", {
       method: "GET",
       query: params,
     });
-    return res?.data || res;
+    const orders = Array.isArray(res?.data)
+      ? res.data
+      : Array.isArray(res?.data?.data)
+      ? res.data.data
+      : [];
+    const meta = res?.data?.meta || { total: orders.length, page: 1, limit: 10 };
+    return { data: orders, meta };
   },
 
   async getOrderById(id: string) {
