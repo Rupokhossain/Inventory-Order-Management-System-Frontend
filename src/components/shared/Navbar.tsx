@@ -5,11 +5,18 @@ import { usePathname } from "next/navigation";
 import { Package, ShoppingCart, Menu, X, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useCartStore } from "@/stores/useCartStore";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const totalItems = useCartStore((state) => state.getTotalItems());
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -57,9 +64,11 @@ export default function Navbar() {
           <Link href="/cart">
             <Button variant="outline" size="icon" className="relative" title="Shopping Cart">
               <ShoppingCart className="h-4 w-4" />
-              <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
-                0
-              </span>
+              {mounted && totalItems > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 flex h-4.5 min-w-4.5 px-1 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground shadow-sm animate-in zoom-in-50">
+                  {totalItems}
+                </span>
+              )}
             </Button>
           </Link>
 
