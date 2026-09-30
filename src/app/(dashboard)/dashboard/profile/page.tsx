@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { authService } from "@/services/auth.service";
 import {
@@ -35,6 +36,12 @@ export default function CustomerProfilePage() {
   const { user, token, setAuth } = useAuthStore();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  const queryClient = useQueryClient();
+  const { data: profileResponse, isLoading: isProfileLoading } = useQuery({
+    queryKey: ["my-profile"],
+    queryFn: () => authService.getProfile(),
+  });
+
   const [name, setName] = useState(user?.name || "");
   const [profileImg, setProfileImg] = useState(
     (user as any)?.profileImg || user?.avatar || ""
@@ -53,12 +60,31 @@ export default function CustomerProfilePage() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
 
+  // Sync state when fresh profile data arrives from DB
   useEffect(() => {
-    if (user?.name) setName(user.name);
-    if ((user as any)?.profileImg || user?.avatar) {
-      setProfileImg((user as any)?.profileImg || user?.avatar || "");
+    const freshUser = profileResponse?.data || profileResponse;
+    if (freshUser && freshUser.id) {
+      if (freshUser.name) setName(freshUser.name);
+      if (freshUser.profileImg) setProfileImg(freshUser.profileImg);
+      if (token) {
+        setAuth(
+          {
+            id: freshUser.id,
+            name: freshUser.name || "Customer User",
+            email: freshUser.email,
+            role: freshUser.role || "CUSTOMER",
+            avatar: freshUser.profileImg,
+          },
+          token
+        );
+      }
+    } else if (user) {
+      if (user.name) setName(user.name);
+      if ((user as any)?.profileImg || user?.avatar) {
+        setProfileImg((user as any)?.profileImg || user?.avatar || "");
+      }
     }
-  }, [user]);
+  }, [profileResponse, user, token, setAuth]);
 
   // Handle local file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,12 +152,18 @@ export default function CustomerProfilePage() {
 
       const updated = res?.data || res;
 
-      // Update Zustand and cookies immediately
-      if (user && token) {
+      // Invalidate queries so TanStack cache updates everywhere
+      queryClient.invalidateQueries({ queryKey: ["my-profile"] });
+      queryClient.invalidateQueries({ queryKey: ["auth-profile-sync"] });
+
+      // Update Zustand and persistent storage immediately
+      if (token) {
         setAuth(
           {
-            ...user,
+            id: updated?.id || user?.id || "",
             name: updated?.name || name.trim(),
+            email: updated?.email || user?.email || "",
+            role: updated?.role || user?.role || "CUSTOMER",
             avatar: updated?.profileImg || profileImg,
           },
           token

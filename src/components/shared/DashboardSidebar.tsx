@@ -169,8 +169,16 @@ export function DashboardSidebar() {
       {/* User Info & Sign Out Footer */}
       <div className="p-4 border-t border-border bg-muted/20 space-y-3">
         <div className="flex items-center gap-3 px-2 py-1 rounded-lg bg-card border border-border/60">
-          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-xs shrink-0">
-            {user?.name?.slice(0, 2).toUpperCase() || "US"}
+          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-xs shrink-0 overflow-hidden border border-border/80">
+            {user?.avatar || (user as any)?.profileImg ? (
+              <img
+                src={user?.avatar || (user as any)?.profileImg}
+                alt={user?.name || "User Avatar"}
+                className="h-full w-full object-cover rounded-full"
+              />
+            ) : (
+              user?.name?.slice(0, 2).toUpperCase() || "US"
+            )}
           </div>
           <div className="overflow-hidden min-w-0 flex-1">
             <p className="text-xs font-bold truncate text-foreground">
