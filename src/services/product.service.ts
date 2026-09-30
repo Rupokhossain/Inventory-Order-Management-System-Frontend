@@ -5,7 +5,6 @@ import { Product, Category, ProductFilterParams } from "@/types/product";
 export const productService = {
   async getProducts(params?: ProductFilterParams): Promise<{ data: Product[] }> {
     try {
-      // সর্টিং প্যারামিটার প্রিজমার আসল ফিল্ডে কনভার্ট করা
       let sortBy = "createdAt";
       let sortOrder: "asc" | "desc" = "desc";
 
@@ -25,10 +24,10 @@ export const productService = {
         query: {
           searchTerm: params?.searchTerm || undefined,
           categoryId: params?.categoryId || undefined,
-          sortBy: sortBy,      // প্রিজমাতে 'createdAt' যাবে
-          sortOrder: sortOrder,// 'desc' যাবে
+          sortBy: sortBy,
+          sortOrder: sortOrder,
           page: params?.page || 1,
-          limit: params?.limit || 12,
+          limit: params?.limit || 50,
         },
       });
 
@@ -57,5 +56,36 @@ export const productService = {
     } catch (error) {
       return [];
     }
+  },
+
+  async createProduct(data: FormData | Record<string, any>): Promise<any> {
+    const res = await apiClient<any>("/products", {
+      method: "POST",
+      body: data,
+    });
+    return res?.data || res;
+  },
+
+  async updateProduct(id: string, data: FormData | Record<string, any>): Promise<any> {
+    const res = await apiClient<any>(`/products/${id}`, {
+      method: "PATCH",
+      body: data,
+    });
+    return res?.data || res;
+  },
+
+  async updateStock(id: string, quantity: number): Promise<any> {
+    const res = await apiClient<any>(`/products/${id}/stock`, {
+      method: "PATCH",
+      body: { quantity },
+    });
+    return res?.data || res;
+  },
+
+  async deleteProduct(id: string): Promise<any> {
+    const res = await apiClient<any>(`/products/${id}`, {
+      method: "DELETE",
+    });
+    return res?.data || res;
   },
 };
