@@ -12,6 +12,7 @@ export default function PaymentSuccessPage() {
   const orderId = searchParams.get("orderId") || "ORD-" + Math.floor(100000 + Math.random() * 900000);
   const amount = searchParams.get("amount") || "0.00";
   const method = searchParams.get("method") || "bKash Sandbox";
+  const trxId = searchParams.get("trxId");
 
   const getMethodLabel = (m: string) => {
     if (m === "bkash") return "bKash Tokenized Sandbox";
@@ -59,6 +60,14 @@ export default function PaymentSuccessPage() {
                 ${Number(amount).toFixed(2)}
               </span>
             </div>
+            {trxId && (
+              <div className="sm:col-span-3 pt-2.5 mt-1 border-t border-border/60 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                <span className="text-muted-foreground font-medium">bKash Transaction ID (TrxID):</span>
+                <span className="font-mono font-bold text-emerald-600 bg-emerald-500/10 px-2.5 py-0.5 rounded text-xs">
+                  {trxId}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Fulfillment Pipeline Timeline */}

@@ -58,7 +58,7 @@ export default function CartPage() {
   const subtotal = getTotalPrice();
   const totalItems = getTotalItems();
   const estimatedShipping = subtotal > 0 ? (subtotal > 500 ? 0 : 50) : 0;
-  const estimatedTax = subtotal * 0.05; // 5% standard VAT/Tax
+  const estimatedTax = subtotal * 0.05; 
   const totalAmount = subtotal + estimatedShipping + estimatedTax;
 
   // Empty Cart State
@@ -106,19 +106,19 @@ export default function CartPage() {
         <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
           <Link
             href="/products"
-            className="inline-flex h-9 items-center gap-1.5 rounded-md border border-border bg-background px-3.5 text-xs font-semibold text-foreground hover:bg-muted transition-colors shadow-xs"
+            className="inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-muted transition-colors shadow-xs"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             <span>Continue Shopping</span>
           </Link>
-          <div className="inline-flex h-9 items-center rounded-md border border-border bg-muted/40 px-3.5 text-xs font-semibold text-foreground shadow-xs">
+          <Badge variant="outline" className="text-xs sm:text-sm px-3.5 py-1">
             {totalItems} {totalItems === 1 ? "Item" : "Items"} Allocated
-          </div>
+          </Badge>
           <Button
             variant="outline"
             size="sm"
             onClick={clearCart}
-            className="h-9 px-3.5 rounded-md text-xs font-semibold text-destructive hover:bg-destructive/10 hover:text-destructive border-border shadow-xs"
+            className="text-xs text-destructive hover:bg-destructive/10 hover:text-destructive h-8"
           >
             Clear Cart
           </Button>
