@@ -30,12 +30,16 @@ export default function ManagerOrdersPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedOrderModal, setSelectedOrderModal] = useState<any | null>(null);
 
-  const { data: response, isLoading, refetch } = useQuery({
+  const { data: response, isLoading, isError, error, refetch, isFetching } = useQuery({
     queryKey: ["manager-all-orders"],
     queryFn: () => orderService.getAllOrders({ limit: 100 }),
   });
 
-  const orders: any[] = response?.data || [];
+  const orders: any[] = Array.isArray(response?.data)
+    ? response.data
+    : Array.isArray(response)
+    ? response
+    : [];
 
   // Update Status Mutation
   const updateStatusMutation = useMutation({
@@ -88,6 +92,12 @@ export default function ManagerOrdersPage() {
             <Truck className="h-3 w-3 mr-1" /> Processing
           </Badge>
         );
+      case "SHIPPED":
+        return (
+          <Badge className="bg-indigo-500/10 text-indigo-600 border border-indigo-500/20 font-semibold px-2.5 py-0.5">
+            <Truck className="h-3 w-3 mr-1" /> Shipped
+          </Badge>
+        );
       case "PENDING":
         return (
           <Badge className="bg-amber-500/10 text-amber-600 border border-amber-500/20 font-semibold px-2.5 py-0.5">
@@ -122,9 +132,10 @@ export default function ManagerOrdersPage() {
           variant="outline"
           size="sm"
           onClick={() => refetch()}
+          disabled={isFetching}
           className="gap-2 text-xs font-semibold self-start sm:self-auto"
         >
-          <RefreshCw className="h-3.5 w-3.5" />
+          <RefreshCw className={`h-3.5 w-3.5 ${isFetching ? "animate-spin" : ""}`} />
           Refresh Pipeline
         </Button>
       </div>
@@ -242,6 +253,23 @@ export default function ManagerOrdersPage() {
               Loading manager dispatch queue...
             </p>
           </div>
+        ) : isError ? (
+          <div className="p-12 text-center space-y-3">
+            <AlertCircle className="h-8 w-8 text-rose-500 mx-auto" />
+            <h3 className="text-sm font-bold text-foreground">Failed to load dispatch queue</h3>
+            <p className="text-xs text-rose-500 max-w-sm mx-auto font-medium">
+              {(error as any)?.message || "Authentication error or unauthorized access."}
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => refetch()}
+              className="gap-2 text-xs font-semibold"
+            >
+              <RefreshCw className="h-3.5 w-3.5" />
+              Retry Connection
+            </Button>
+          </div>
         ) : filteredOrders.length === 0 ? (
           <div className="p-12 text-center space-y-3">
             <Truck className="h-8 w-8 text-muted-foreground mx-auto opacity-40" />
@@ -337,6 +365,7 @@ export default function ManagerOrdersPage() {
                           <option value="PENDING">PENDING</option>
                           <option value="CONFIRMED">CONFIRMED</option>
                           <option value="PROCESSING">PROCESSING</option>
+                          <option value="SHIPPED">SHIPPED</option>
                           <option value="DELIVERED">DELIVERED</option>
                           <option value="CANCELLED">CANCELLED</option>
                         </select>

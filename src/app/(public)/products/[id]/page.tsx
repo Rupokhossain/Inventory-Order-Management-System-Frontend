@@ -158,26 +158,26 @@ export default function ProductDetailsPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+    <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 min-w-0">
       {/* Breadcrumbs */}
-      <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
-        <Link href="/" className="hover:text-foreground transition-colors">
+      <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8 min-w-0 flex-wrap">
+        <Link href="/" className="hover:text-foreground transition-colors shrink-0">
           Home
         </Link>
-        <span>/</span>
-        <Link href="/products" className="hover:text-foreground transition-colors">
+        <span className="shrink-0">/</span>
+        <Link href="/products" className="hover:text-foreground transition-colors shrink-0">
           Inventory
         </Link>
-        <span>/</span>
+        <span className="shrink-0">/</span>
         <span className="text-foreground font-medium truncate max-w-xs sm:max-w-md">
           {product.name}
         </span>
       </nav>
 
       {/* Main Showcase Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-14">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-14 min-w-0">
         {/* Left Column: Product Image using next/image */}
-        <div className="space-y-4">
+        <div className="space-y-4 min-w-0">
           <div className="relative aspect-4/3 w-full rounded-2xl overflow-hidden border border-border/80 bg-muted shadow-sm group">
             <Image
               src={productImage}
@@ -241,17 +241,17 @@ export default function ProductDetailsPage() {
         </div>
 
         {/* Right Column: Details & Actions */}
-        <div className="flex flex-col justify-between">
-          <div className="space-y-6">
-            <div>
+        <div className="flex flex-col justify-between min-w-0">
+          <div className="space-y-6 min-w-0">
+            <div className="min-w-0">
               <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary mb-2">
                 <Sparkles className="h-3.5 w-3.5" />
                 <span>Enterprise Warehouse Verified</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground break-words [overflow-wrap:anywhere]">
                 {product.name}
               </h1>
-              <div className="flex items-center gap-4 mt-3">
+              <div className="flex items-center gap-4 mt-3 flex-wrap">
                 <span className="text-3xl font-extrabold text-foreground">
                   ${Number(product.price).toFixed(2)}
                 </span>
@@ -262,11 +262,11 @@ export default function ProductDetailsPage() {
             </div>
 
             {/* Description */}
-            <div className="border-t border-b border-border py-4">
+            <div className="border-t border-b border-border py-4 min-w-0">
               <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
                 Product Overview
               </h3>
-              <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
+              <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line break-words [overflow-wrap:anywhere] max-w-full">
                 {product.description ||
                   "This high-grade inventory item has been quality-checked and stored in regulated warehouse facilities. Available for rapid packing and logistics distribution."}
               </p>
@@ -382,11 +382,11 @@ export default function ProductDetailsPage() {
       </div>
 
       {/* Product Details Tabs */}
-      <div className="mt-16 border-t border-border pt-10">
-        <div className="flex border-b border-border gap-6">
+      <div className="mt-16 border-t border-border pt-10 min-w-0">
+        <div className="flex border-b border-border gap-4 sm:gap-6 overflow-x-auto pb-px">
           <button
             onClick={() => setActiveTab("specs")}
-            className={`pb-3 text-sm font-semibold transition-all relative ${
+            className={`pb-3 text-sm font-semibold transition-all relative shrink-0 ${
               activeTab === "specs"
                 ? "text-primary border-b-2 border-primary"
                 : "text-muted-foreground hover:text-foreground"
@@ -396,7 +396,7 @@ export default function ProductDetailsPage() {
           </button>
           <button
             onClick={() => setActiveTab("logistics")}
-            className={`pb-3 text-sm font-semibold transition-all relative ${
+            className={`pb-3 text-sm font-semibold transition-all relative shrink-0 ${
               activeTab === "logistics"
                 ? "text-primary border-b-2 border-primary"
                 : "text-muted-foreground hover:text-foreground"
@@ -406,7 +406,7 @@ export default function ProductDetailsPage() {
           </button>
           <button
             onClick={() => setActiveTab("policy")}
-            className={`pb-3 text-sm font-semibold transition-all relative ${
+            className={`pb-3 text-sm font-semibold transition-all relative shrink-0 ${
               activeTab === "policy"
                 ? "text-primary border-b-2 border-primary"
                 : "text-muted-foreground hover:text-foreground"
@@ -416,18 +416,18 @@ export default function ProductDetailsPage() {
           </button>
         </div>
 
-        <div className="py-6">
+        <div className="py-6 min-w-0">
           {activeTab === "specs" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-center justify-between p-3.5 rounded-lg border border-border/60 bg-card">
-                <span className="text-xs text-muted-foreground font-medium">SKU Code</span>
-                <span className="text-xs font-mono font-bold text-foreground">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 min-w-0">
+              <div className="flex items-center justify-between p-3.5 rounded-lg border border-border/60 bg-card min-w-0 gap-2">
+                <span className="text-xs text-muted-foreground font-medium shrink-0">SKU Code</span>
+                <span className="text-xs font-mono font-bold text-foreground truncate ml-2">
                   {product.id.slice(0, 10).toUpperCase()}
                 </span>
               </div>
-              <div className="flex items-center justify-between p-3.5 rounded-lg border border-border/60 bg-card">
-                <span className="text-xs text-muted-foreground font-medium">Full System ID</span>
-                <span className="text-xs font-mono text-muted-foreground truncate max-w-[200px]">
+              <div className="flex items-center justify-between p-3.5 rounded-lg border border-border/60 bg-card min-w-0 gap-2">
+                <span className="text-xs text-muted-foreground font-medium shrink-0">Full System ID</span>
+                <span className="text-xs font-mono text-muted-foreground truncate max-w-[200px] ml-2">
                   {product.id}
                 </span>
               </div>
@@ -508,8 +508,8 @@ export default function ProductDetailsPage() {
 
       {/* Related / More Products Section */}
       {displayRelated.length > 0 && (
-        <div className="mt-12 border-t border-border pt-12">
-          <div className="flex items-center justify-between mb-6">
+        <div className="mt-12 border-t border-border pt-12 min-w-0">
+          <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
             <div>
               <h2 className="text-2xl font-bold tracking-tight text-foreground">
                 {categoryRelated.length > 0
@@ -529,7 +529,7 @@ export default function ProductDetailsPage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 min-w-0">
             {displayRelated.map((rel) => {
               const relImage =
                 rel.imageUrl ||

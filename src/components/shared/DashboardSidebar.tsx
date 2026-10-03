@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -32,9 +33,18 @@ interface NavSection {
   items: NavItem[];
 }
 
-export function DashboardSidebar() {
+interface DashboardSidebarProps {
+  onNavigate?: () => void;
+}
+
+export function DashboardSidebar({ onNavigate }: DashboardSidebarProps = {}) {
   const pathname = usePathname();
   const { user, role, logout } = useAuthStore();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Admin Navigation Groups
   const adminSections: NavSection[] = [
@@ -42,13 +52,14 @@ export function DashboardSidebar() {
       title: "EXECUTIVE SUITE",
       items: [
         { name: "Overview", href: "/admin", icon: LayoutDashboard },
+        { name: "Customer Orders", href: "/admin/orders", icon: ShoppingBag },
         { name: "User Directory", href: "/admin/users", icon: Users },
       ],
     },
     {
       title: "LOGISTICS & STOCK",
       items: [
-        { name: "Central Inventory", href: "/admin/inventory", icon: Boxes },
+        { name: "Products & Inventory", href: "/admin/inventory", icon: Boxes },
         { name: "Audit & Reports", href: "/admin/reports", icon: FileText },
       ],
     },
@@ -112,8 +123,11 @@ export function DashboardSidebar() {
         </div>
         <div className="flex flex-col">
           <span className="font-bold text-lg leading-tight tracking-tight">IOMS.</span>
-          <span className="text-[10px] text-primary font-semibold tracking-wider uppercase">
-            {role ? `${role} PORTAL` : "FULFILLMENT HUB"}
+          <span
+            suppressHydrationWarning
+            className="text-[10px] text-primary font-semibold tracking-wider uppercase"
+          >
+            {mounted && role ? `${role} PORTAL` : "FULFILLMENT HUB"}
           </span>
         </div>
       </div>
@@ -139,6 +153,7 @@ export function DashboardSidebar() {
                   <Link
                     key={item.name}
                     href={item.href}
+                    onClick={onNavigate}
                     className={`group flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs font-semibold transition-all ${
                       isActive
                         ? "bg-primary text-primary-foreground shadow-xs font-bold"
@@ -170,21 +185,32 @@ export function DashboardSidebar() {
       <div className="p-4 border-t border-border bg-muted/20 space-y-3">
         <div className="flex items-center gap-3 px-2 py-1 rounded-lg bg-card border border-border/60">
           <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-xs shrink-0 overflow-hidden border border-border/80">
-            {user?.avatar || (user as any)?.profileImg ? (
+            {mounted && (user?.avatar || (user as any)?.profileImg) ? (
               <img
                 src={user?.avatar || (user as any)?.profileImg}
                 alt={user?.name || "User Avatar"}
                 className="h-full w-full object-cover rounded-full"
               />
             ) : (
-              user?.name?.slice(0, 2).toUpperCase() || "US"
+              <span suppressHydrationWarning>
+                {mounted && user?.name ? user.name.slice(0, 2).toUpperCase() : "US"}
+              </span>
             )}
           </div>
           <div className="overflow-hidden min-w-0 flex-1">
-            <p className="text-xs font-bold truncate text-foreground">
-              {user?.name || "Signed User"}
+            <div className="flex items-center gap-1.5">
+              <p suppressHydrationWarning className="text-xs font-bold truncate text-foreground">
+                {mounted && user?.name ? user.name : "Signed User"}
+              </p>
+              {mounted && (user?.role || role) && (
+                <span className="text-[9px] font-extrabold px-1.5 py-0.2 rounded bg-primary/10 text-primary uppercase shrink-0">
+                  {user?.role || role}
+                </span>
+              )}
+            </div>
+            <p suppressHydrationWarning className="text-[10px] text-muted-foreground truncate">
+              {mounted && user?.email ? user.email : ""}
             </p>
-            <p className="text-[10px] text-muted-foreground truncate">{user?.email}</p>
           </div>
         </div>
 

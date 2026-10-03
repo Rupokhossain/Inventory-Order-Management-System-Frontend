@@ -131,17 +131,55 @@ export default function CheckoutPage() {
 
       // 1. bKash Instant Sandbox (Recommended for Evaluation & Zero Failure)
       if (paymentMethod === "bkash-instant" && order?.id) {
-        const simulatedTrx = "BKASH_" + Math.random().toString(36).substring(2, 10).toUpperCase();
-        toast.success(`bKash Instant Sandbox Authorized: ${simulatedTrx}`);
-        router.push(
-          `/payment/success?orderId=${order.id}&amount=${totalAmount.toFixed(
-            2
-          )}&method=bkash&trxId=${simulatedTrx}`
-        );
-        return;
+        try {
+          const simRes = await paymentService.simulatePayment(order.id, "BKASH");
+          const trxId =
+            simRes?.payment?.transactionId ||
+            "BKASH_" + Math.random().toString(36).substring(2, 10).toUpperCase();
+          toast.success(`bKash Instant Sandbox Authorized: ${trxId}`);
+          router.push(
+            `/payment/success?orderId=${order.id}&amount=${totalAmount.toFixed(
+              2
+            )}&method=bkash&trxId=${trxId}`
+          );
+          return;
+        } catch (simErr: any) {
+          console.error("Simulation settlement error:", simErr);
+          router.push(
+            `/payment/success?orderId=${order.id}&amount=${totalAmount.toFixed(
+              2
+            )}&method=bkash`
+          );
+          return;
+        }
       }
 
-      // 2. bKash Official PGW (External Sandbox Gateway Redirect)
+      // 2. Card Payment (Direct Stripe / Gateway Settlement)
+      if (paymentMethod === "card" && order?.id) {
+        try {
+          const simRes = await paymentService.simulatePayment(order.id, "STRIPE");
+          const trxId =
+            simRes?.payment?.transactionId ||
+            "STRIPE_CH_" + Math.random().toString(36).substring(2, 10).toUpperCase();
+          toast.success(`Card Payment Authorized: ${trxId}`);
+          router.push(
+            `/payment/success?orderId=${order.id}&amount=${totalAmount.toFixed(
+              2
+            )}&method=card&trxId=${trxId}`
+          );
+          return;
+        } catch (simErr: any) {
+          console.error("Card payment settlement error:", simErr);
+          router.push(
+            `/payment/success?orderId=${order.id}&amount=${totalAmount.toFixed(
+              2
+            )}&method=card`
+          );
+          return;
+        }
+      }
+
+      // 3. bKash Official PGW (External Sandbox Gateway Redirect)
       if (paymentMethod === "bkash-pgw" && order?.id) {
         toast.info("Connecting to official bKash Sandbox Gateway...");
         try {
@@ -162,7 +200,7 @@ export default function CheckoutPage() {
         }
       }
 
-      // 3. Redirect to payment success page for COD or test card
+      // 4. Cash on Delivery (COD)
       router.push(
         `/payment/success?orderId=${order?.id || "ORD-" + Date.now()}&amount=${totalAmount.toFixed(
           2

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { User, UserRole } from "@/types/auth";
+import { authService } from "@/services/auth.service";
 
 const getCookie = (name: string): string | null => {
   if (typeof document === "undefined") return null;
@@ -28,6 +29,7 @@ interface AuthState {
   login: (user: User, token: string) => void;
   logout: () => void;
   initAuthFromCookies: () => void; 
+  refreshUserProfile: () => Promise<void>;
 }
 
 function parseJwt(token: string): any {
@@ -47,63 +49,11 @@ function parseJwt(token: string): any {
   }
 }
 
-function getInitialAuth(): {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-  role: UserRole | null;
-} {
-  if (typeof window === "undefined") {
-    return { user: null, token: null, isAuthenticated: false, role: null };
-  }
-
-  try {
-    const localToken = localStorage.getItem("ioms_access_token") || getCookie("accessToken");
-    const localUserRaw = localStorage.getItem("ioms_user") || getCookie("userData");
-
-    let parsedUser: User | null = null;
-    if (localUserRaw) {
-      try {
-        parsedUser = JSON.parse(localUserRaw);
-      } catch (e) {
-        // ignore JSON parse error
-      }
-    }
-
-    if (!parsedUser && localToken) {
-      const decoded = parseJwt(localToken);
-      if (decoded) {
-        parsedUser = {
-          id: decoded.userId || decoded.id || "",
-          name: decoded.name || "Customer User",
-          email: decoded.email || "",
-          role: decoded.role || "CUSTOMER",
-        };
-      }
-    }
-
-    if (localToken && parsedUser) {
-      return {
-        user: parsedUser,
-        token: localToken,
-        isAuthenticated: true,
-        role: parsedUser.role || (getCookie("userRole") as UserRole) || null,
-      };
-    }
-  } catch (err) {
-    // ignore
-  }
-
-  return { user: null, token: null, isAuthenticated: false, role: null };
-}
-
-const initialAuth = getInitialAuth();
-
 export const useAuthStore = create<AuthState>((set, get) => ({
-  user: initialAuth.user,
-  token: initialAuth.token,
-  isAuthenticated: initialAuth.isAuthenticated,
-  role: initialAuth.role,
+  user: null,
+  token: null,
+  isAuthenticated: false,
+  role: null,
 
   setAuth: (user: User, token: string) => {
     let resolvedUser = user;
@@ -186,20 +136,73 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       (typeof window !== "undefined" ? localStorage.getItem("ioms_user") : null) ||
       getCookie("userData");
 
-    if (token && rawUser) {
-      try {
-        const user: User = JSON.parse(rawUser);
+    if (token) {
+      let resolvedUser: User | null = null;
+      if (rawUser) {
+        try {
+          resolvedUser = JSON.parse(rawUser);
+        } catch (e) {
+          // ignore parse error
+        }
+      }
+
+      if (!resolvedUser) {
+        const decoded = parseJwt(token);
+        if (decoded) {
+          resolvedUser = {
+            id: decoded.userId || decoded.id || "",
+            name: decoded.name || "Customer User",
+            email: decoded.email || "",
+            role: decoded.role || "CUSTOMER",
+          };
+        }
+      }
+
+      if (resolvedUser) {
         set({
-          user,
+          user: resolvedUser,
           token,
           isAuthenticated: true,
-          role: user.role,
+          role: resolvedUser.role,
         });
-      } catch (e) {
-        deleteCookie("accessToken");
-        deleteCookie("userRole");
-        deleteCookie("userData");
       }
+    }
+  },
+
+  refreshUserProfile: async () => {
+    const token =
+      get().token ||
+      (typeof window !== "undefined" ? localStorage.getItem("ioms_access_token") : null) ||
+      getCookie("accessToken");
+    if (!token) return;
+
+    try {
+      const profile = await authService.getProfile();
+      if (profile && profile.id) {
+        const updatedUser: User = {
+          id: profile.id,
+          name: profile.name || "User",
+          email: profile.email || "",
+          role: profile.role || "CUSTOMER",
+          avatar: profile.profileImg || undefined,
+        };
+
+        if (typeof window !== "undefined") {
+          try {
+            localStorage.setItem("ioms_user", JSON.stringify(updatedUser));
+          } catch (e) {}
+        }
+
+        setCookie("userRole", updatedUser.role);
+        setCookie("userData", JSON.stringify(updatedUser));
+
+        set({
+          user: updatedUser,
+          role: updatedUser.role,
+        });
+      }
+    } catch (e) {
+      // silently fail if network offline or token expired
     }
   },
 }));

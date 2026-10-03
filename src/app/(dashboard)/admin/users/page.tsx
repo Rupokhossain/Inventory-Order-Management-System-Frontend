@@ -42,6 +42,18 @@ export default function AdminUsersPage() {
     },
   });
 
+  const updateRoleMutation = useMutation({
+    mutationFn: ({ id, role }: { id: string; role: "ADMIN" | "MANAGER" | "CUSTOMER" }) =>
+      adminService.updateUserRole(id, role),
+    onSuccess: (data, variables) => {
+      toast.success(`User role successfully changed to ${variables.role}!`);
+      queryClient.invalidateQueries({ queryKey: ["admin-users-list"] });
+    },
+    onError: (err: any) => {
+      toast.error(err?.message || "Failed to update user role");
+    },
+  });
+
   const filteredUsers = users.filter((u) => {
     const matchesRole =
       selectedRole === "ALL" ? true : u.role === selectedRole;
@@ -227,21 +239,23 @@ export default function AdminUsersPage() {
                         </div>
                       </td>
 
-                      {/* Role */}
+                      {/* Role Selector */}
                       <td className="px-4 py-3.5">
-                        {user.role === "ADMIN" ? (
-                          <Badge className="bg-purple-500/10 text-purple-600 border border-purple-500/20 font-semibold px-2 py-0.5">
-                            ADMINISTRATOR
-                          </Badge>
-                        ) : user.role === "MANAGER" ? (
-                          <Badge className="bg-amber-500/10 text-amber-600 border border-amber-500/20 font-semibold px-2 py-0.5">
-                            LOGISTICS MANAGER
-                          </Badge>
-                        ) : (
-                          <Badge className="bg-blue-500/10 text-blue-600 border border-blue-500/20 font-semibold px-2 py-0.5">
-                            CUSTOMER
-                          </Badge>
-                        )}
+                        <select
+                          value={user.role}
+                          disabled={updateRoleMutation.isPending}
+                          onChange={(e) =>
+                            updateRoleMutation.mutate({
+                              id: user.id,
+                              role: e.target.value as "ADMIN" | "MANAGER" | "CUSTOMER",
+                            })
+                          }
+                          className="text-xs font-semibold rounded-md border border-border bg-background px-2.5 py-1 text-foreground focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer transition-colors hover:border-primary/50"
+                        >
+                          <option value="CUSTOMER">CUSTOMER</option>
+                          <option value="MANAGER">LOGISTICS MANAGER</option>
+                          <option value="ADMIN">ADMINISTRATOR</option>
+                        </select>
                       </td>
 
                       {/* Status */}

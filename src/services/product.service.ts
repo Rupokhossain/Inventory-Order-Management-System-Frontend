@@ -49,13 +49,31 @@ export const productService = {
 
   async getCategories(): Promise<Category[]> {
     try {
-      const res = await apiClient<any>("/categories", { method: "GET" });
+      const res = await apiClient<any>("/categories", {
+        method: "GET",
+        query: { limit: 100 },
+      });
       return Array.isArray(res?.data)
         ? res.data
         : res?.data?.data || res?.data?.result || [];
     } catch (error) {
       return [];
     }
+  },
+
+  async createCategory(data: { name: string; description?: string }): Promise<any> {
+    const res = await apiClient<any>("/categories", {
+      method: "POST",
+      body: data,
+    });
+    return res?.data || res;
+  },
+
+  async deleteCategory(id: string): Promise<any> {
+    const res = await apiClient<any>(`/categories/${id}`, {
+      method: "DELETE",
+    });
+    return res?.data || res;
   },
 
   async createProduct(data: FormData | Record<string, any>): Promise<any> {

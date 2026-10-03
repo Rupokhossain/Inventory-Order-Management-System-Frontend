@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   description: "Enterprise-grade inventory, warehouse, and order management platform.",
 };
 
+import { AuthInitializer } from "@/components/providers/auth-initializer";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -22,6 +24,7 @@ export default function RootLayout({
       <body className={`${inter.className} min-h-screen bg-background text-foreground antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <QueryProvider>
+            <AuthInitializer />
             {children}
             <Toaster richColors position="top-right" closeButton />
           </QueryProvider>

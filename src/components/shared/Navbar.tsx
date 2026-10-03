@@ -2,21 +2,26 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Package, ShoppingCart, Menu, X, ArrowRight } from "lucide-react";
+import { Package, ShoppingCart, Menu, X, ArrowRight, LayoutDashboard, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { useState, useEffect } from "react";
 import { useCartStore } from "@/stores/useCartStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const totalItems = useCartStore((state) => state.getTotalItems());
+  const { user, isAuthenticated, role } = useAuthStore();
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const dashboardHref =
+    role === "ADMIN" ? "/admin" : role === "MANAGER" ? "/manager" : "/dashboard";
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -73,12 +78,21 @@ export default function Navbar() {
           </Link>
 
           {/* Login / Dashboard Button */}
-          <Link href="/login" className="hidden sm:inline-flex">
-            <Button size="sm" className="gap-2">
-              Sign In
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
+          {mounted && isAuthenticated ? (
+            <Link href={dashboardHref} className="hidden sm:inline-flex">
+              <Button size="sm" className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-xs">
+                <LayoutDashboard className="h-4 w-4" />
+                <span>Dashboard</span>
+              </Button>
+            </Link>
+          ) : (
+            <Link href="/login" className="hidden sm:inline-flex">
+              <Button size="sm" className="gap-2">
+                <span>Sign In</span>
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+          )}
 
           {/* Mobile Menu Trigger */}
           <Button
@@ -105,10 +119,34 @@ export default function Navbar() {
               {link.name}
             </Link>
           ))}
-          <div className="pt-2 border-t border-border">
-            <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="w-full">
-              <Button className="w-full">Sign In to Dashboard</Button>
+
+          {mounted && isAuthenticated && (
+            <Link
+              href={dashboardHref}
+              onClick={() => setMobileMenuOpen(false)}
+              className="block py-2 text-base font-semibold text-primary flex items-center gap-2 border-t border-border/50 pt-3"
+            >
+              <LayoutDashboard className="h-4.5 w-4.5" />
+              <span>Go to Dashboard</span>
             </Link>
+          )}
+
+          <div className="pt-2 border-t border-border">
+            {mounted && isAuthenticated ? (
+              <Link href={dashboardHref} onClick={() => setMobileMenuOpen(false)} className="w-full">
+                <Button className="w-full gap-2 bg-primary hover:bg-primary/90 font-semibold">
+                  <LayoutDashboard className="h-4 w-4" />
+                  <span>Open Dashboard</span>
+                </Button>
+              </Link>
+            ) : (
+              <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="w-full">
+                <Button className="w-full gap-2 font-semibold">
+                  <span>Sign In to Account</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       )}

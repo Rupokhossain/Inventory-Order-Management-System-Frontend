@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Package,
   ShoppingBag,
@@ -23,16 +23,36 @@ import {
   Banknote,
   Search,
   Filter,
+  Zap,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { orderService } from "@/services/order.service";
+import { paymentService } from "@/services/payment.service";
+import { toast } from "sonner";
 
 export default function CustomerDashboardPage() {
   const { user } = useAuthStore();
+  const queryClient = useQueryClient();
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [payingOrderId, setPayingOrderId] = useState<string | null>(null);
+
+  const handleQuickPay = async (orderId: string) => {
+    try {
+      setPayingOrderId(orderId);
+      await paymentService.simulatePayment(orderId, "BKASH");
+      toast.success("Payment authorized & settled! Order status updated to Confirmed.");
+      queryClient.invalidateQueries({ queryKey: ["customer-orders"] });
+      queryClient.invalidateQueries({ queryKey: ["my-orders"] });
+      queryClient.invalidateQueries({ queryKey: ["my-payments"] });
+    } catch (err: any) {
+      toast.error(err?.message || "Payment settlement failed");
+    } finally {
+      setPayingOrderId(null);
+    }
+  };
 
   // Fetch customer orders
   const { data, isLoading } = useQuery({
@@ -125,10 +145,10 @@ export default function CustomerDashboardPage() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl sm:text-2xl font-extrabold text-foreground">
+                <h1 suppressHydrationWarning className="text-xl sm:text-2xl font-extrabold text-foreground">
                   Welcome back, {user?.name || "Valued Customer"}!
                 </h1>
-                <Badge variant="outline" className="text-[10px] uppercase font-bold text-primary">
+                <Badge suppressHydrationWarning variant="outline" className="text-[10px] uppercase font-bold text-primary">
                   {user?.role || "CUSTOMER"}
                 </Badge>
               </div>
@@ -341,15 +361,29 @@ export default function CustomerDashboardPage() {
                         <td className="py-3.5 px-4">{getPaymentBadge(order)}</td>
                         <td className="py-3.5 px-4">{getStatusBadge(order.status)}</td>
                         <td className="py-3.5 px-4 sm:px-6 text-right">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setSelectedOrder(order)}
-                            className="h-8 text-xs font-semibold gap-1.5 text-primary hover:text-primary hover:bg-primary/10"
-                          >
-                            <Eye className="h-3.5 w-3.5" />
-                            <span>Invoice</span>
-                          </Button>
+                          <div className="flex items-center justify-end gap-1.5">
+                            {order.status === "PENDING" && order.payment?.status !== "PAID" && (
+                              <Button
+                                size="sm"
+                                disabled={payingOrderId === order.id}
+                                onClick={() => handleQuickPay(order.id)}
+                                className="h-7 px-2.5 text-[11px] font-semibold gap-1 bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs cursor-pointer"
+                                title="Authorize and settle payment for this order"
+                              >
+                                <Zap className="h-3 w-3" />
+                                <span>{payingOrderId === order.id ? "Settling..." : "Pay Now"}</span>
+                              </Button>
+                            )}
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setSelectedOrder(order)}
+                              className="h-8 text-xs font-semibold gap-1.5 text-primary hover:text-primary hover:bg-primary/10"
+                            >
+                              <Eye className="h-3.5 w-3.5" />
+                              <span>Invoice</span>
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     );

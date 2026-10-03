@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { orderService } from "@/services/order.service";
+import { paymentService } from "@/services/payment.service";
+import { toast } from "sonner";
 import {
   Package,
   Clock,
@@ -19,6 +21,8 @@ import {
   CreditCard,
   X,
   Printer,
+  ArrowLeft,
+  Zap,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,9 +30,26 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 
 export default function CustomerOrdersPage() {
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedInvoiceOrder, setSelectedInvoiceOrder] = useState<any | null>(null);
+  const [payingOrderId, setPayingOrderId] = useState<string | null>(null);
+
+  const handleQuickPay = async (orderId: string) => {
+    try {
+      setPayingOrderId(orderId);
+      await paymentService.simulatePayment(orderId, "BKASH");
+      toast.success("Payment authorized & settled! Order status updated to CONFIRMED.");
+      queryClient.invalidateQueries({ queryKey: ["my-orders-full"] });
+      queryClient.invalidateQueries({ queryKey: ["customer-orders"] });
+      queryClient.invalidateQueries({ queryKey: ["my-payments"] });
+    } catch (err: any) {
+      toast.error(err?.message || "Payment settlement failed");
+    } finally {
+      setPayingOrderId(null);
+    }
+  };
 
   const { data: response, isLoading } = useQuery({
     queryKey: ["my-orders-full"],
@@ -145,6 +166,15 @@ export default function CustomerOrdersPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-border/60">
         <div>
+          <div className="flex items-center gap-3 mb-2.5">
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground bg-muted/60 hover:bg-muted px-2.5 py-1 rounded-lg border border-border/60 transition-colors"
+            >
+              <ArrowLeft className="h-3.5 w-3.5 text-primary" />
+              <span>Back to Dashboard</span>
+            </Link>
+          </div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
             <ShoppingBag className="h-6 w-6 text-primary" />
             My Order Dispatches
@@ -310,6 +340,18 @@ export default function CustomerOrdersPage() {
                     {/* Actions */}
                     <td className="px-4 py-3.5 text-right">
                       <div className="flex items-center justify-end gap-2">
+                        {order.status === "PENDING" && order.payment?.status !== "PAID" && (
+                          <Button
+                            size="sm"
+                            disabled={payingOrderId === order.id}
+                            onClick={() => handleQuickPay(order.id)}
+                            className="h-8 px-2.5 text-xs font-semibold gap-1 bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs cursor-pointer"
+                            title="Pay & settle this pending order"
+                          >
+                            <Zap className="h-3 w-3" />
+                            <span>{payingOrderId === order.id ? "Settling..." : "Pay Now"}</span>
+                          </Button>
+                        )}
                         <Button
                           variant="outline"
                           size="sm"

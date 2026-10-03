@@ -20,6 +20,16 @@ export const apiClient = ofetch.create({
       options.headers = headers;
     }
   },
+  onResponseError({ response }) {
+    const serverMessage =
+      response._data?.message || response._data?.error || response.statusText;
+    if (serverMessage) {
+      const error: any = new Error(serverMessage);
+      error.data = response._data;
+      error.status = response.status;
+      throw error;
+    }
+  },
 });
 
 export default apiClient;

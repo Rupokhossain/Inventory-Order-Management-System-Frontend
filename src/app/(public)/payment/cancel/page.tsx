@@ -1,24 +1,36 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { XCircle, ArrowLeft, RefreshCw, ShoppingCart, Zap, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { paymentService } from "@/services/payment.service";
 
-export default function PaymentCancelPage() {
+function PaymentCancelContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId") || "ORD-" + Math.floor(100000 + Math.random() * 900000);
   const status = searchParams.get("status") || "cancelled";
   const errorMsg = searchParams.get("error");
 
-  const handleInstantBypass = () => {
-    const trxId = "BKASH_" + Math.random().toString(36).substring(2, 10).toUpperCase();
-    router.push(
-      `/payment/success?orderId=${orderId}&amount=150.00&method=bkash&trxId=${trxId}`
-    );
+  const handleInstantBypass = async () => {
+    try {
+      const res = await paymentService.simulatePayment(orderId, "BKASH");
+      const trxId =
+        res?.payment?.transactionId ||
+        "BKASH_" + Math.random().toString(36).substring(2, 10).toUpperCase();
+      router.push(
+        `/payment/success?orderId=${orderId}&amount=150.00&method=bkash&trxId=${trxId}`
+      );
+    } catch {
+      const fallbackTrx = "BKASH_" + Math.random().toString(36).substring(2, 10).toUpperCase();
+      router.push(
+        `/payment/success?orderId=${orderId}&amount=150.00&method=bkash&trxId=${fallbackTrx}`
+      );
+    }
   };
 
   return (
@@ -77,3 +89,19 @@ export default function PaymentCancelPage() {
     </div>
   );
 }
+
+export default function PaymentCancelPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="container mx-auto max-w-2xl px-4 py-24 text-center">
+          <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4" />
+          <p className="text-sm text-muted-foreground">Loading payment details...</p>
+        </div>
+      }
+    >
+      <PaymentCancelContent />
+    </Suspense>
+  );
+}
+

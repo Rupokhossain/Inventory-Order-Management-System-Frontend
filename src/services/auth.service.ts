@@ -16,6 +16,21 @@ export const authService = {
     });
   },
 
+  async verifyEmail(data: { email: string; otp: string }): Promise<AuthResponse> {
+    return await apiClient<AuthResponse>("/auth/verify-email", {
+      method: "POST",
+      body: data,
+    });
+  },
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async resendRegistrationOtp(email: string): Promise<any> {
+    return await apiClient<any>("/auth/resend-registration-otp", {
+      method: "POST",
+      body: { email },
+    });
+  },
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async getProfile(): Promise<any> {
     const res = await apiClient<any>("/users/me", {

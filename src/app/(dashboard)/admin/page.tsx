@@ -122,8 +122,8 @@ export default function AdminDashboard() {
             </Link>
             <Link href="/admin/inventory">
               <Button variant="outline" size="sm" className="gap-1.5 text-xs font-semibold">
-                <Boxes className="h-4 w-4" />
-                <span>Stock Control</span>
+                <Boxes className="h-4 w-4 text-primary" />
+                <span>Manage Products</span>
               </Button>
             </Link>
           </div>
@@ -389,6 +389,17 @@ export default function AdminDashboard() {
           </h3>
 
           <div className="space-y-2">
+            <Link
+              href="/admin/orders"
+              className="flex items-center justify-between p-2.5 rounded-lg border border-border/60 hover:bg-muted/50 transition-colors text-xs font-semibold"
+            >
+              <div className="flex items-center gap-2">
+                <ShoppingBag className="h-4 w-4 text-purple-500" />
+                <span>Customer Orders Ledger</span>
+              </div>
+              <span>→</span>
+            </Link>
+
             <Link
               href="/admin/users"
               className="flex items-center justify-between p-2.5 rounded-lg border border-border/60 hover:bg-muted/50 transition-colors text-xs font-semibold"

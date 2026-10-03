@@ -31,4 +31,12 @@ export const adminService = {
     });
     return res?.data || res;
   },
+
+  async updateUserRole(id: string, role: "ADMIN" | "MANAGER" | "CUSTOMER"): Promise<any> {
+    const res = await apiClient<any>(`/user/${id}/role`, {
+      method: "PATCH",
+      body: { role },
+    });
+    return res?.data || res;
+  },
 };

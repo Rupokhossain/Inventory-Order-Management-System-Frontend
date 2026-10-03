@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -19,7 +19,7 @@ import { productService } from "@/services/product.service";
 import { Product } from "@/types/product";
 import { useCartStore } from "@/stores/useCartStore";
 
-export default function ProductsPage() {
+function ProductsPageContent() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -270,11 +270,11 @@ export default function ProductsPage() {
                   <CardContent className="p-4">
                     <Link
                       href={`/products/${product.id}`}
-                      className="font-semibold text-foreground text-base line-clamp-1 hover:text-primary transition-colors"
+                      className="font-semibold text-foreground text-base line-clamp-1 hover:text-primary transition-colors break-words [overflow-wrap:anywhere]"
                     >
                       {product.name}
                     </Link>
-                    <p className="text-xs text-muted-foreground line-clamp-2 mt-1 min-h-[32px]">
+                    <p className="text-xs text-muted-foreground line-clamp-2 mt-1 min-h-[32px] break-words [overflow-wrap:anywhere]">
                       {product.description ||
                         "High-quality inventory supply item verified for warehouse dispatch."}
                     </p>
@@ -312,3 +312,19 @@ export default function ProductsPage() {
     </div>
   );
 }
+
+export default function ProductsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="container mx-auto px-4 py-16 text-center">
+          <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4" />
+          <p className="text-sm text-muted-foreground">Loading products catalog...</p>
+        </div>
+      }
+    >
+      <ProductsPageContent />
+    </Suspense>
+  );
+}
+

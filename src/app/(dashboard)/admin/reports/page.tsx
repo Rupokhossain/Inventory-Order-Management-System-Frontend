@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
@@ -7,15 +8,9 @@ import { adminService } from "@/services/admin.service";
 import {
   FileText,
   Printer,
-  Download,
-  DollarSign,
-  TrendingUp,
+
   ShieldCheck,
-  Calendar,
-  CheckCircle2,
-  Clock,
-  Package,
-  Layers,
+
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -36,6 +31,7 @@ export default function AdminReportsPage() {
     queryFn: () => adminService.getAllUsers(),
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const orders: any[] = ordersData?.data || [];
   const products: any[] = productsData?.data || [];
 

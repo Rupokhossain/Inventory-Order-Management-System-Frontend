@@ -25,6 +25,7 @@ import {
   Trash2,
   Link as LinkIcon,
   Image as ImageIcon,
+  ArrowLeft,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -216,6 +217,15 @@ export default function CustomerProfilePage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-border/60">
         <div>
+          <div className="flex items-center gap-3 mb-2.5">
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground bg-muted/60 hover:bg-muted px-2.5 py-1 rounded-lg border border-border/60 transition-colors"
+            >
+              <ArrowLeft className="h-3.5 w-3.5 text-primary" />
+              <span>Back to Dashboard</span>
+            </Link>
+          </div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
             <User className="h-6 w-6 text-primary" />
             Account & Profile Settings

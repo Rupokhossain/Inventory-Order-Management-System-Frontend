@@ -73,4 +73,16 @@ export const paymentService = {
     });
     return res.data;
   },
+
+  simulatePayment: async (orderId: string, gateway?: string) => {
+    const res = await apiClient<{
+      success: boolean;
+      message: string;
+      data: any;
+    }>(`/payments/simulate/${orderId}`, {
+      method: "POST",
+      body: { gateway },
+    });
+    return res.data;
+  },
 };
