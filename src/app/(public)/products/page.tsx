@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -9,7 +9,9 @@ import {
   ShoppingCart,
   AlertCircle,
   Sparkles,
-  PackageCheck,
+  PackageSearch,
+  RotateCcw,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,15 +33,14 @@ function ProductsPageContent() {
   const currentCategory = searchParams.get("category") || "all";
   const currentSort = searchParams.get("sort") || "newest";
 
-  // Controlled Input State (ওয়ার্নিং ফিক্স করার জন্য)
+  // Controlled Input State with smooth debouncing
   const [searchValue, setSearchValue] = useState(currentSearch);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSearchValue(currentSearch);
   }, [currentSearch]);
 
-  // ২. UI সর্টিং ভ্যালুকে Prisma ব্যাকএন্ডের আসল ফিল্ডে রূপান্তর (Prisma Error রোধ করতে)
+  // ২. UI সর্টিং ভ্যালুকে Prisma ব্যাকএন্ডের আসল ফিল্ডে রূপান্তর
   let sortBy = "createdAt";
   let sortOrder: "asc" | "desc" = "desc";
 
@@ -65,14 +66,31 @@ function ProductsPageContent() {
     } else {
       params.delete(key);
     }
-    router.push(`${pathname}?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  // ৪. ক্যাটাগরি ফেচ
-  const { data: categories = [] } = useQuery({
-    queryKey: ["categories"],
-    queryFn: () => productService.getCategories(),
-  });
+  const clearAllFilters = () => {
+    setSearchValue("");
+    router.push(pathname, { scroll: false });
+  };
+
+  // ৪. Debounced search input handler (৩৫০ মিলি-সেকেন্ড ডিবাউন্স)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const activeUrlSearch = searchParams.get("search") || "";
+      if (searchValue.trim() !== activeUrlSearch.trim()) {
+        const params = new URLSearchParams(searchParams.toString());
+        if (searchValue.trim()) {
+          params.set("search", searchValue.trim());
+        } else {
+          params.delete("search");
+        }
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+      }
+    }, 350);
+
+    return () => clearTimeout(timer);
+  }, [searchValue, searchParams, pathname, router]);
 
   // ৫. ব্যাকএন্ডের প্রোডাক্টস ফেচ
   const {
@@ -88,11 +106,58 @@ function ProductsPageContent() {
         sortBy: sortBy,
         sortOrder: sortOrder,
         page: 1,
-        limit: 20,
+        limit: 100,
       }),
   });
 
   const products: Product[] = productResponse?.data || [];
+
+  // ৬. ক্যাটাগরি ফেচ ও রেজিলিয়েন্ট লিস্ট তৈরি
+  const { data: apiCategories = [] } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => productService.getCategories(),
+  });
+
+  const categories = useMemo(() => {
+    const map = new Map<string, { id: string; name: string }>();
+
+    if (Array.isArray(apiCategories)) {
+      apiCategories.forEach((cat: any) => {
+        if (cat && cat.id && cat.name) {
+          map.set(cat.id, { id: cat.id, name: cat.name });
+        }
+      });
+    }
+
+    if (Array.isArray(products)) {
+      products.forEach((prod) => {
+        if (prod.category && prod.category.id && prod.category.name) {
+          map.set(prod.category.id, {
+            id: prod.category.id,
+            name: prod.category.name,
+          });
+        }
+      });
+    }
+
+    return Array.from(map.values());
+  }, [apiCategories, products]);
+
+  const selectedCategoryObj = categories.find(
+    (cat) =>
+      cat.id.toLowerCase() === currentCategory.toLowerCase() ||
+      cat.name.toLowerCase() === currentCategory.toLowerCase()
+  );
+
+  const selectedCategoryName = selectedCategoryObj
+    ? selectedCategoryObj.name
+    : currentCategory !== "all"
+    ? currentCategory
+    : "";
+
+  const activeCategorySelectValue = selectedCategoryObj
+    ? selectedCategoryObj.id
+    : currentCategory;
 
   return (
     <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
@@ -112,29 +177,44 @@ function ProductsPageContent() {
           </p>
         </div>
         <Badge variant="outline" className="w-fit text-sm px-3.5 py-1">
-          {products.length} Products Available
+          {products.length} Products {currentSearch || currentCategory !== "all" ? "Found" : "Available"}
         </Badge>
       </div>
 
       {/* Filters & Search */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
         <div className="md:col-span-2 relative">
-          <Search className="absolute left-3.5 top-3 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3.5 top-3 h-4 w-4 text-muted-foreground pointer-events-none" />
           <Input
             placeholder="Search by product name, SKU..."
-            className="pl-10 h-10"
+            className="pl-10 pr-9 h-10"
             value={searchValue}
-            onChange={(e) => {
-              setSearchValue(e.target.value);
-              updateQuery("search", e.target.value);
+            onChange={(e) => setSearchValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                updateQuery("search", searchValue.trim());
+              }
             }}
           />
+          {searchValue && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearchValue("");
+                updateQuery("search", "");
+              }}
+              className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors p-0.5 rounded-full hover:bg-muted"
+              title="Clear search"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
         </div>
 
         <div>
           <select
-            className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-            value={currentCategory}
+            className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer transition-colors"
+            value={activeCategorySelectValue}
             onChange={(e) => updateQuery("category", e.target.value)}
           >
             <option value="all">All Categories</option>
@@ -148,7 +228,7 @@ function ProductsPageContent() {
 
         <div>
           <select
-            className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer transition-colors"
             value={currentSort}
             onChange={(e) => updateQuery("sort", e.target.value)}
           >
@@ -159,6 +239,58 @@ function ProductsPageContent() {
           </select>
         </div>
       </div>
+
+      {/* Active Filter Chips */}
+      {(currentSearch || currentCategory !== "all") && (
+        <div className="flex flex-wrap items-center gap-2 mb-6 p-2.5 rounded-lg bg-muted/40 border border-border/50">
+          <span className="text-xs text-muted-foreground font-medium mr-1">
+            Active filters:
+          </span>
+          {currentSearch && (
+            <Badge
+              variant="secondary"
+              className="gap-1.5 pl-2.5 pr-1.5 py-1 text-xs font-medium bg-primary/10 text-primary border border-primary/20"
+            >
+              <span>Search: &ldquo;{currentSearch}&rdquo;</span>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchValue("");
+                  updateQuery("search", "");
+                }}
+                className="hover:bg-primary/20 rounded-full p-0.5 transition-colors"
+                title="Remove search"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </Badge>
+          )}
+          {currentCategory !== "all" && (
+            <Badge
+              variant="secondary"
+              className="gap-1.5 pl-2.5 pr-1.5 py-1 text-xs font-medium bg-primary/10 text-primary border border-primary/20"
+            >
+              <span>Category: {selectedCategoryName || currentCategory}</span>
+              <button
+                type="button"
+                onClick={() => updateQuery("category", "all")}
+                className="hover:bg-primary/20 rounded-full p-0.5 transition-colors"
+                title="Remove category filter"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </Badge>
+          )}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={clearAllFilters}
+            className="h-7 text-xs text-muted-foreground hover:text-foreground px-2 ml-auto"
+          >
+            Clear all filters
+          </Button>
+        </div>
+      )}
 
       {/* Skeleton Loading State */}
       {isLoading && (
@@ -195,15 +327,36 @@ function ProductsPageContent() {
 
       {/* Empty State */}
       {!isLoading && !isError && products.length === 0 && (
-        <div className="text-center py-16 border rounded-xl border-dashed">
-          <PackageCheck className="mx-auto h-12 w-12 text-muted-foreground mb-3" />
-          <h3 className="text-lg font-semibold text-foreground">
-            No Products Found
+        <div className="text-center py-16 px-4 border rounded-2xl border-dashed bg-muted/10 max-w-xl mx-auto my-8">
+          <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-muted/60 mb-4">
+            <PackageSearch className="h-8 w-8 text-muted-foreground" />
+          </div>
+          <h3 className="text-xl font-bold text-foreground">
+            {currentSearch && selectedCategoryName
+              ? `No products found matching "${currentSearch}" in "${selectedCategoryName}"`
+              : currentSearch
+              ? `No products found matching "${currentSearch}"`
+              : selectedCategoryName
+              ? `No products found in "${selectedCategoryName}" category`
+              : "No Products Found"}
           </h3>
-          <p className="text-sm text-muted-foreground mt-1">
-            Try adjusting your search criteria or filter to find what you are
-            looking for.
+          <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto leading-relaxed">
+            {currentSearch || currentCategory !== "all"
+              ? "We couldn't find any inventory products matching your selection. Try searching with different keywords or reset your filters."
+              : "There are currently no products available in the warehouse inventory catalog."}
           </p>
+          {(currentSearch || currentCategory !== "all") && (
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              <Button
+                variant="default"
+                onClick={clearAllFilters}
+                className="gap-2 font-medium"
+              >
+                <RotateCcw className="h-4 w-4" />
+                Reset All Filters
+              </Button>
+            </div>
+          )}
         </div>
       )}
 
@@ -286,21 +439,21 @@ function ProductsPageContent() {
                   </CardContent>
                 </div>
 
-                <CardFooter className="p-4 pt-0 gap-2">
+                <CardFooter className="p-4 pt-0 gap-2.5">
+                  <Link href={`/products/${product.id}`} className="flex-1">
+                    <Button
+                      variant="outline"
+                      className="w-full h-10 text-xs sm:text-sm font-semibold rounded-lg"
+                    >
+                      Details
+                    </Button>
+                  </Link>
                   <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 text-xs"
-                  >
-                    <Link href={`/products/${product.id}`}>Details</Link>
-                  </Button>
-                  <Button
-                    size="sm"
-                    className="flex-1 text-xs gap-1.5"
+                    className="flex-1 h-10 text-xs sm:text-sm font-semibold gap-1.5 rounded-lg"
                     disabled={isOutOfStock}
                     onClick={() => addItem(product, 1)}
                   >
-                    <ShoppingCart className="h-3.5 w-3.5" />
+                    <ShoppingCart className="size-4" />
                     <span>Add</span>
                   </Button>
                 </CardFooter>

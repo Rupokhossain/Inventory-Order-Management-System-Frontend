@@ -140,19 +140,19 @@ export default function CustomerDashboardPage() {
       <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-gradient-to-r from-card via-card to-primary/5 p-6 sm:p-8 shadow-xs">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-start gap-4">
-            <div className="h-12 w-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0 shadow-xs">
-              <Package className="h-6 w-6" />
+            <div className="h-14 w-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0 shadow-xs">
+              <Package className="h-7 w-7" />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 suppressHydrationWarning className="text-xl sm:text-2xl font-extrabold text-foreground">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <h1 suppressHydrationWarning className="text-2xl sm:text-3xl font-black text-foreground">
                   Welcome back, {user?.name || "Valued Customer"}!
                 </h1>
-                <Badge suppressHydrationWarning variant="outline" className="text-[10px] uppercase font-bold text-primary">
+                <Badge suppressHydrationWarning variant="outline" className="text-xs uppercase font-extrabold text-primary border-primary/30">
                   {user?.role || "CUSTOMER"}
                 </Badge>
               </div>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-1 max-w-xl">
+              <p className="text-sm sm:text-base text-muted-foreground max-w-xl leading-relaxed">
                 Here is what is happening with your warehouse orders today. You have{" "}
                 <span className="font-bold text-foreground">{activeOrders} active shipment(s)</span> in the
                 fulfillment pipeline.
@@ -163,9 +163,9 @@ export default function CustomerDashboardPage() {
           <div className="flex items-center gap-3">
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-xs sm:text-sm font-semibold text-primary-foreground shadow hover:bg-primary/90 transition-all"
+              className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow hover:bg-primary/90 transition-all h-10"
             >
-              <ShoppingBag className="h-4 w-4" />
+              <ShoppingBag className="h-4.5 w-4.5" />
               <span>Explore Catalog</span>
             </Link>
           </div>
@@ -173,23 +173,23 @@ export default function CustomerDashboardPage() {
       </div>
 
       {/* 2. Invenza Row: 4 Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         {/* Total Orders Card */}
-        <Card className="border-border/80 shadow-2xs relative overflow-hidden bg-card">
-          <CardContent className="p-5 space-y-2">
+        <Card className="border-border/80 shadow-2xs relative overflow-hidden bg-card rounded-2xl">
+          <CardContent className="p-5 sm:p-6 space-y-3">
             <div className="flex items-center justify-between">
-              <div className="h-10 w-10 rounded-lg bg-blue-500/10 text-blue-600 flex items-center justify-center">
-                <ShoppingBag className="h-5 w-5" />
+              <div className="h-11 w-11 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center">
+                <ShoppingBag className="h-6 w-6" />
               </div>
-              <span className="text-[11px] font-bold text-blue-600 bg-blue-500/10 px-2 py-0.5 rounded-full flex items-center gap-1">
-                <TrendingUp className="h-3 w-3" /> Live
+              <span className="text-xs font-bold text-blue-600 bg-blue-500/10 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                <TrendingUp className="h-3.5 w-3.5" /> Live
               </span>
             </div>
             <div>
-              <div className="text-2xl font-extrabold text-foreground">
+              <div className="text-2xl sm:text-3xl font-black text-foreground">
                 {isLoading ? "..." : totalOrders}
               </div>
-              <div className="text-xs font-medium text-muted-foreground">Total Orders Placed</div>
+              <div className="text-xs sm:text-sm font-medium text-muted-foreground mt-0.5">Total Orders Placed</div>
             </div>
             <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden mt-3">
               <div className="h-full bg-blue-600 rounded-full" style={{ width: "80%" }} />
@@ -198,21 +198,21 @@ export default function CustomerDashboardPage() {
         </Card>
 
         {/* Total Spend Card */}
-        <Card className="border-border/80 shadow-2xs relative overflow-hidden bg-card">
-          <CardContent className="p-5 space-y-2">
+        <Card className="border-border/80 shadow-2xs relative overflow-hidden bg-card rounded-2xl">
+          <CardContent className="p-5 sm:p-6 space-y-3">
             <div className="flex items-center justify-between">
-              <div className="h-10 w-10 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
-                <TrendingUp className="h-5 w-5" />
+              <div className="h-11 w-11 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+                <TrendingUp className="h-6 w-6" />
               </div>
-              <span className="text-[11px] font-bold text-emerald-600 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+              <span className="text-xs font-bold text-emerald-600 bg-emerald-500/10 px-2.5 py-0.5 rounded-full">
                 Cumulative
               </span>
             </div>
             <div>
-              <div className="text-2xl font-extrabold text-foreground">
+              <div className="text-2xl sm:text-3xl font-black text-foreground">
                 ${isLoading ? "..." : totalSpent.toFixed(2)}
               </div>
-              <div className="text-xs font-medium text-muted-foreground">Total Capital Spent</div>
+              <div className="text-xs sm:text-sm font-medium text-muted-foreground mt-0.5">Total Capital Spent</div>
             </div>
             <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden mt-3">
               <div className="h-full bg-emerald-600 rounded-full" style={{ width: "90%" }} />
@@ -221,21 +221,21 @@ export default function CustomerDashboardPage() {
         </Card>
 
         {/* Active Dispatches Card */}
-        <Card className="border-border/80 shadow-2xs relative overflow-hidden bg-card">
-          <CardContent className="p-5 space-y-2">
+        <Card className="border-border/80 shadow-2xs relative overflow-hidden bg-card rounded-2xl">
+          <CardContent className="p-5 sm:p-6 space-y-3">
             <div className="flex items-center justify-between">
-              <div className="h-10 w-10 rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center">
-                <Clock className="h-5 w-5" />
+              <div className="h-11 w-11 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
+                <Clock className="h-6 w-6" />
               </div>
-              <span className="text-[11px] font-bold text-amber-600 bg-amber-500/10 px-2 py-0.5 rounded-full">
+              <span className="text-xs font-bold text-amber-600 bg-amber-500/10 px-2.5 py-0.5 rounded-full">
                 In Transit
               </span>
             </div>
             <div>
-              <div className="text-2xl font-extrabold text-foreground">
+              <div className="text-2xl sm:text-3xl font-black text-foreground">
                 {isLoading ? "..." : activeOrders}
               </div>
-              <div className="text-xs font-medium text-muted-foreground">Pending / In Dispatch</div>
+              <div className="text-xs sm:text-sm font-medium text-muted-foreground mt-0.5">Pending / In Dispatch</div>
             </div>
             <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden mt-3">
               <div className="h-full bg-amber-500 rounded-full" style={{ width: "45%" }} />
@@ -314,17 +314,96 @@ export default function CustomerDashboardPage() {
               </div>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+          <>
+            {/* Mobile Cards View (md:hidden) */}
+            <div className="md:hidden divide-y divide-border/60">
+              {orders.slice(0, 8).map((order) => {
+                const formattedDate = new Date(order.createdAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                });
+
+                return (
+                  <div key={order.id} className="p-4 space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <span className="font-mono font-bold text-foreground text-sm block">
+                          #{order.id.slice(0, 8)}...
+                        </span>
+                        <span className="text-[10px] text-muted-foreground flex items-center gap-1 mt-0.5">
+                          <Clock className="h-2.5 w-2.5" />
+                          {formattedDate}
+                        </span>
+                      </div>
+                      <div>{getStatusBadge(order.status)}</div>
+                    </div>
+
+                    <div className="bg-muted/30 p-2.5 rounded-lg border border-border/50 text-xs space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] uppercase font-bold text-muted-foreground">Items</span>
+                        <span className="font-semibold text-foreground text-right truncate max-w-[180px]">
+                          {order.orderItems?.length || 1} item(s) (
+                          {order.orderItems?.[0]?.product?.name ||
+                            order.orderItems?.[0]?.productName ||
+                            "Item"}
+                          )
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] uppercase font-bold text-muted-foreground">Payment</span>
+                        <div>{getPaymentBadge(order)}</div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-1 border-t border-border/40">
+                        <span className="text-[10px] uppercase font-bold text-muted-foreground">Total</span>
+                        <span className="font-mono font-bold text-foreground text-sm">
+                          ${Number(order.totalAmount).toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-2 pt-1 border-t border-border/40">
+                      {order.status === "PENDING" && order.payment?.status !== "PAID" && (
+                        <Button
+                          size="sm"
+                          disabled={payingOrderId === order.id}
+                          onClick={() => handleQuickPay(order.id)}
+                          className="h-8 px-3 text-xs font-semibold gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs cursor-pointer flex-1"
+                          title="Authorize and settle payment for this order"
+                        >
+                          <Zap className="h-3.5 w-3.5" />
+                          <span>{payingOrderId === order.id ? "Settling..." : "Pay Now"}</span>
+                        </Button>
+                      )}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setSelectedOrder(order)}
+                        className="h-8 text-xs font-semibold gap-1.5 text-primary hover:text-primary hover:bg-primary/10 flex-1"
+                      >
+                        <Eye className="h-3.5 w-3.5" />
+                        <span>Invoice</span>
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Desktop Table View (hidden md:block) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left text-xs min-w-[850px]">
                 <thead className="bg-muted/40 border-b border-border/60 text-muted-foreground font-semibold">
                   <tr>
-                    <th className="py-3 px-4 sm:px-6">Order ID</th>
-                    <th className="py-3 px-4">Date Placed</th>
-                    <th className="py-3 px-4">Items / Supplies</th>
-                    <th className="py-3 px-4">Total Amount</th>
-                    <th className="py-3 px-4">Payment Method</th>
-                    <th className="py-3 px-4">Status</th>
-                    <th className="py-3 px-4 sm:px-6 text-right">Actions</th>
+                    <th className="py-3 px-4 sm:px-6 whitespace-nowrap">Order ID</th>
+                    <th className="py-3 px-4 whitespace-nowrap">Date Placed</th>
+                    <th className="py-3 px-4 whitespace-nowrap">Items / Supplies</th>
+                    <th className="py-3 px-4 whitespace-nowrap">Total Amount</th>
+                    <th className="py-3 px-4 whitespace-nowrap">Payment Method</th>
+                    <th className="py-3 px-4 whitespace-nowrap">Status</th>
+                    <th className="py-3 px-4 sm:px-6 text-right whitespace-nowrap">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/60">
@@ -337,16 +416,16 @@ export default function CustomerDashboardPage() {
 
                     return (
                       <tr key={order.id} className="hover:bg-muted/30 transition-colors">
-                        <td className="py-3.5 px-4 sm:px-6 font-mono font-bold text-foreground">
+                        <td className="py-3.5 px-4 sm:px-6 font-mono font-bold text-foreground whitespace-nowrap">
                           {order.id.slice(0, 8)}...
                         </td>
-                        <td className="py-3.5 px-4 text-muted-foreground">{formattedDate}</td>
+                        <td className="py-3.5 px-4 text-muted-foreground whitespace-nowrap">{formattedDate}</td>
                         <td className="py-3.5 px-4">
-                          <div className="flex items-center gap-1.5">
+                          <div className="flex items-center gap-1.5 whitespace-nowrap">
                             <span className="font-semibold text-foreground">
                               {order.orderItems?.length || 1} item(s)
                             </span>
-                            <span className="text-muted-foreground">
+                            <span className="text-muted-foreground truncate max-w-[200px]">
                               (
                               {order.orderItems?.[0]?.product?.name ||
                                 order.orderItems?.[0]?.productName ||
@@ -355,12 +434,12 @@ export default function CustomerDashboardPage() {
                             </span>
                           </div>
                         </td>
-                        <td className="py-3.5 px-4 font-bold text-foreground">
+                        <td className="py-3.5 px-4 font-bold text-foreground whitespace-nowrap">
                           ${Number(order.totalAmount).toFixed(2)}
                         </td>
-                        <td className="py-3.5 px-4">{getPaymentBadge(order)}</td>
-                        <td className="py-3.5 px-4">{getStatusBadge(order.status)}</td>
-                        <td className="py-3.5 px-4 sm:px-6 text-right">
+                        <td className="py-3.5 px-4 whitespace-nowrap">{getPaymentBadge(order)}</td>
+                        <td className="py-3.5 px-4 whitespace-nowrap">{getStatusBadge(order.status)}</td>
+                        <td className="py-3.5 px-4 sm:px-6 text-right whitespace-nowrap">
                           <div className="flex items-center justify-end gap-1.5">
                             {order.status === "PENDING" && order.payment?.status !== "PAID" && (
                               <Button
@@ -391,6 +470,7 @@ export default function CustomerDashboardPage() {
                 </tbody>
               </table>
             </div>
+          </>
           )}
         </CardContent>
       </Card>

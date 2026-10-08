@@ -12,6 +12,7 @@ import {
   Truck,
   PlusCircle,
   ShoppingBag,
+  MessageSquare,
   LogOut,
   User,
   CreditCard,
@@ -53,6 +54,7 @@ export function DashboardSidebar({ onNavigate }: DashboardSidebarProps = {}) {
       items: [
         { name: "Overview", href: "/admin", icon: LayoutDashboard },
         { name: "Customer Orders", href: "/admin/orders", icon: ShoppingBag },
+        { name: "Customer Inquiries", href: "/admin/inquiries", icon: MessageSquare },
         { name: "User Directory", href: "/admin/users", icon: Users },
       ],
     },
@@ -73,6 +75,7 @@ export function DashboardSidebar({ onNavigate }: DashboardSidebarProps = {}) {
         { name: "Overview", href: "/manager", icon: LayoutDashboard },
         { name: "Product Inventory", href: "/manager/products", icon: PlusCircle },
         { name: "Dispatch & Orders", href: "/manager/orders", icon: Truck },
+        { name: "Customer Inquiries", href: "/manager/inquiries", icon: MessageSquare },
       ],
     },
     {
@@ -115,17 +118,17 @@ export function DashboardSidebar({ onNavigate }: DashboardSidebarProps = {}) {
       : customerSections;
 
   return (
-    <aside className="w-64 border-r border-border bg-card flex flex-col min-h-screen shrink-0">
+    <aside className="w-64 lg:w-72 border-r border-border bg-card flex flex-col h-screen sticky top-0 shrink-0">
       {/* Brand Header */}
-      <div className="h-16 flex items-center px-6 border-b border-border gap-2.5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold shadow-xs">
-          <Package className="h-5 w-5" />
+      <div className="h-16 lg:h-18 flex items-center px-6 border-b border-border gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground font-black shadow-xs">
+          <Package className="h-5.5 w-5.5" />
         </div>
         <div className="flex flex-col">
-          <span className="font-bold text-lg leading-tight tracking-tight">IOMS.</span>
+          <span className="font-black text-xl leading-tight tracking-tight">IOMS.</span>
           <span
             suppressHydrationWarning
-            className="text-[10px] text-primary font-semibold tracking-wider uppercase"
+            className="text-xs text-primary font-bold tracking-wider uppercase mt-0.5"
           >
             {mounted && role ? `${role} PORTAL` : "FULFILLMENT HUB"}
           </span>
@@ -133,13 +136,13 @@ export function DashboardSidebar({ onNavigate }: DashboardSidebarProps = {}) {
       </div>
 
       {/* Navigation Groups */}
-      <div className="flex-1 p-4 space-y-6 overflow-y-auto">
+      <div className="flex-1 p-4 lg:p-5 space-y-6 overflow-y-auto">
         {sections.map((section, idx) => (
-          <div key={idx} className="space-y-1.5">
-            <p className="px-3 text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest">
+          <div key={idx} className="space-y-2">
+            <p className="px-3 text-xs font-bold text-muted-foreground/80 uppercase tracking-wider">
               {section.title}
             </p>
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               {section.items.map((item) => {
                 const Icon = item.icon;
                 const isActive =
@@ -154,15 +157,15 @@ export function DashboardSidebar({ onNavigate }: DashboardSidebarProps = {}) {
                     key={item.name}
                     href={item.href}
                     onClick={onNavigate}
-                    className={`group flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs font-semibold transition-all ${
+                    className={`group flex items-center justify-between px-4 py-2.5 sm:py-3 rounded-xl text-sm font-semibold transition-all ${
                       isActive
                         ? "bg-primary text-primary-foreground shadow-xs font-bold"
                         : "text-muted-foreground hover:bg-muted/70 hover:text-foreground"
                     }`}
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3.5">
                       <Icon
-                        className={`h-4 w-4 transition-colors ${
+                        className={`h-5 w-5 transition-colors shrink-0 ${
                           isActive
                             ? "text-primary-foreground"
                             : "text-muted-foreground group-hover:text-foreground"
@@ -171,7 +174,7 @@ export function DashboardSidebar({ onNavigate }: DashboardSidebarProps = {}) {
                       <span>{item.name}</span>
                     </div>
                     {isActive ? (
-                      <ChevronRight className="h-3.5 w-3.5 opacity-80" />
+                      <ChevronRight className="h-4 w-4 opacity-80" />
                     ) : null}
                   </Link>
                 );
@@ -182,9 +185,9 @@ export function DashboardSidebar({ onNavigate }: DashboardSidebarProps = {}) {
       </div>
 
       {/* User Info & Sign Out Footer */}
-      <div className="p-4 border-t border-border bg-muted/20 space-y-3">
-        <div className="flex items-center gap-3 px-2 py-1 rounded-lg bg-card border border-border/60">
-          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-xs shrink-0 overflow-hidden border border-border/80">
+      <div className="p-4 lg:p-5 border-t border-border bg-muted/20 space-y-3">
+        <div className="flex items-center gap-3 px-3 py-2 rounded-xl bg-card border border-border/80 shadow-xs">
+          <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-sm shrink-0 overflow-hidden border border-border/80">
             {mounted && (user?.avatar || (user as any)?.profileImg) ? (
               <img
                 src={user?.avatar || (user as any)?.profileImg}
@@ -199,16 +202,16 @@ export function DashboardSidebar({ onNavigate }: DashboardSidebarProps = {}) {
           </div>
           <div className="overflow-hidden min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
-              <p suppressHydrationWarning className="text-xs font-bold truncate text-foreground">
+              <p suppressHydrationWarning className="text-sm font-bold truncate text-foreground">
                 {mounted && user?.name ? user.name : "Signed User"}
               </p>
               {mounted && (user?.role || role) && (
-                <span className="text-[9px] font-extrabold px-1.5 py-0.2 rounded bg-primary/10 text-primary uppercase shrink-0">
+                <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-primary/15 text-primary uppercase shrink-0">
                   {user?.role || role}
                 </span>
               )}
             </div>
-            <p suppressHydrationWarning className="text-[10px] text-muted-foreground truncate">
+            <p suppressHydrationWarning className="text-xs text-muted-foreground truncate">
               {mounted && user?.email ? user.email : ""}
             </p>
           </div>
@@ -217,13 +220,13 @@ export function DashboardSidebar({ onNavigate }: DashboardSidebarProps = {}) {
         <Button
           variant="outline"
           size="sm"
-          className="w-full gap-2 text-rose-500 hover:text-rose-600 hover:bg-rose-500/10 border-rose-500/20 text-xs font-semibold h-8"
+          className="w-full gap-2 text-rose-600 hover:text-rose-700 hover:bg-rose-500/10 border-rose-500/30 text-sm font-semibold h-9 sm:h-10"
           onClick={() => {
             logout();
             window.location.href = "/login";
           }}
         >
-          <LogOut className="h-3.5 w-3.5" />
+          <LogOut className="h-4 w-4" />
           <span>Sign Out</span>
         </Button>
       </div>

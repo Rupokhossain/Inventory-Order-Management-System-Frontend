@@ -294,9 +294,9 @@ export default function CustomerProfilePage() {
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-center gap-4 pt-1">
+                <div className="flex flex-row items-center gap-4 pt-2">
                   {/* Photo Thumbnail */}
-                  <div className="relative h-16 w-16 rounded-full border-2 border-primary/20 overflow-hidden bg-muted flex items-center justify-center shrink-0 shadow-xs">
+                  <div className="relative h-16 w-16 sm:h-18 sm:w-18 rounded-full border-2 border-primary/20 overflow-hidden bg-muted flex items-center justify-center shrink-0 shadow-xs">
                     {profileImg ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img

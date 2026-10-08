@@ -268,12 +268,11 @@ export default function CartPage() {
 
             <CardFooter className="p-5 pt-0 flex flex-col gap-3">
               <Button
-                size="lg"
-                className="w-full gap-2 text-sm font-semibold shadow-md"
+                className="w-full h-13 sm:h-14 gap-2.5 text-base sm:text-lg font-black tracking-wide rounded-xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35 transition-all cursor-pointer"
                 onClick={() => router.push("/checkout")}
               >
                 <span>Proceed to Checkout</span>
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="size-5" />
               </Button>
             </CardFooter>
           </Card>

@@ -96,55 +96,55 @@ export default function AdminUsersPage() {
 
       {/* KPI Cards Row (Invenza 4-Card Style) */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div className="p-4 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between">
-          <div className="space-y-1">
-            <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+        <div className="p-3 sm:p-4 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between min-w-0">
+          <div className="space-y-1 min-w-0">
+            <span className="text-[10px] sm:text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block truncate">
               Total Operators
             </span>
-            <div className="text-2xl font-black text-foreground">{users.length}</div>
-            <span className="text-[10px] text-muted-foreground">All accounts</span>
+            <div className="text-xl sm:text-2xl font-black text-foreground truncate">{users.length}</div>
+            <span className="text-[10px] text-muted-foreground block truncate">All accounts</span>
           </div>
-          <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold">
-            <Users className="h-5 w-5" />
+          <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold shrink-0">
+            <Users className="h-4 w-4 sm:h-5 sm:w-5" />
           </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between">
-          <div className="space-y-1">
-            <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+        <div className="p-3 sm:p-4 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between min-w-0">
+          <div className="space-y-1 min-w-0">
+            <span className="text-[10px] sm:text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block truncate">
               Admins
             </span>
-            <div className="text-2xl font-black text-purple-600">{adminCount}</div>
-            <span className="text-[10px] text-muted-foreground">Superuser tier</span>
+            <div className="text-xl sm:text-2xl font-black text-purple-600 truncate">{adminCount}</div>
+            <span className="text-[10px] text-muted-foreground block truncate">Superuser tier</span>
           </div>
-          <div className="h-10 w-10 rounded-xl bg-purple-500/10 text-purple-600 flex items-center justify-center font-bold">
-            <ShieldCheck className="h-5 w-5" />
+          <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-purple-500/10 text-purple-600 flex items-center justify-center font-bold shrink-0">
+            <ShieldCheck className="h-4 w-4 sm:h-5 sm:w-5" />
           </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between">
-          <div className="space-y-1">
-            <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+        <div className="p-3 sm:p-4 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between min-w-0">
+          <div className="space-y-1 min-w-0">
+            <span className="text-[10px] sm:text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block truncate">
               Managers
             </span>
-            <div className="text-2xl font-black text-amber-600">{managerCount}</div>
-            <span className="text-[10px] text-muted-foreground">Logistics tier</span>
+            <div className="text-xl sm:text-2xl font-black text-amber-600 truncate">{managerCount}</div>
+            <span className="text-[10px] text-muted-foreground block truncate">Logistics tier</span>
           </div>
-          <div className="h-10 w-10 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center font-bold">
-            <Sparkles className="h-5 w-5" />
+          <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center font-bold shrink-0">
+            <Sparkles className="h-4 w-4 sm:h-5 sm:w-5" />
           </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between">
-          <div className="space-y-1">
-            <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+        <div className="p-3 sm:p-4 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between min-w-0">
+          <div className="space-y-1 min-w-0">
+            <span className="text-[10px] sm:text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block truncate">
               Customers
             </span>
-            <div className="text-2xl font-black text-blue-600">{customerCount}</div>
-            <span className="text-[10px] text-muted-foreground">End consumers</span>
+            <div className="text-xl sm:text-2xl font-black text-blue-600 truncate">{customerCount}</div>
+            <span className="text-[10px] text-muted-foreground block truncate">End consumers</span>
           </div>
-          <div className="h-10 w-10 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center font-bold">
-            <Users className="h-5 w-5" />
+          <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center font-bold shrink-0">
+            <Users className="h-4 w-4 sm:h-5 sm:w-5" />
           </div>
         </div>
       </div>
@@ -161,7 +161,7 @@ export default function AdminUsersPage() {
             <button
               key={tab.id}
               onClick={() => setSelectedRole(tab.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
                 selectedRole === tab.id
                   ? "bg-primary text-primary-foreground shadow-xs font-bold"
                   : "text-muted-foreground hover:bg-muted/70 hover:text-foreground"
@@ -183,7 +183,7 @@ export default function AdminUsersPage() {
         </div>
       </div>
 
-      {/* Users Table */}
+      {/* Users Table / Mobile Cards */}
       <div className="bg-card rounded-xl border border-border shadow-xs overflow-hidden">
         {isLoading ? (
           <div className="p-12 text-center space-y-3">
@@ -201,46 +201,60 @@ export default function AdminUsersPage() {
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-muted/40 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border font-bold">
-                <tr>
-                  <th className="px-4 py-3">User & Contact</th>
-                  <th className="px-4 py-3">Access Tier (Role)</th>
-                  <th className="px-4 py-3">Account State</th>
-                  <th className="px-4 py-3">Registered On</th>
-                  <th className="px-4 py-3 text-right">Access Controls</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border/60">
-                {filteredUsers.map((user) => {
-                  const isBlocked = user.status === "BLOCKED";
-
-                  return (
-                    <tr
-                      key={user.id}
-                      className="hover:bg-muted/30 transition-colors"
-                    >
-                      {/* Name & Avatar */}
-                      <td className="px-4 py-3.5">
-                        <div className="flex items-center gap-3">
-                          <div className="h-9 w-9 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0">
-                            {user.name?.slice(0, 2).toUpperCase() || "US"}
-                          </div>
-                          <div>
-                            <span className="font-bold text-foreground text-xs block">
-                              {user.name}
-                            </span>
-                            <span className="text-[10px] text-muted-foreground flex items-center gap-1">
-                              <Mail className="h-2.5 w-2.5" />
-                              {user.email}
-                            </span>
-                          </div>
+          <>
+            {/* Mobile Cards View (md:hidden) */}
+            <div className="md:hidden divide-y divide-border/60">
+              {filteredUsers.map((user) => {
+                const isBlocked = user.status === "BLOCKED";
+                return (
+                  <div key={user.id} className="p-4 space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0">
+                          {user.name?.slice(0, 2).toUpperCase() || "US"}
                         </div>
-                      </td>
+                        <div className="min-w-0">
+                          <h4 className="font-bold text-sm text-foreground truncate">{user.name}</h4>
+                          <p className="text-xs text-muted-foreground flex items-center gap-1 truncate">
+                            <Mail className="h-3 w-3 shrink-0" />
+                            <span className="truncate">{user.email}</span>
+                          </p>
+                        </div>
+                      </div>
+                      <div className="shrink-0">
+                        {isBlocked ? (
+                          <Badge className="bg-rose-500/10 text-rose-600 border border-rose-500/20 text-[10px] font-semibold px-2 py-0.5">
+                            BLOCKED
+                          </Badge>
+                        ) : (
+                          <Badge className="bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-[10px] font-semibold px-2 py-0.5">
+                            ACTIVE
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
 
-                      {/* Role Selector */}
-                      <td className="px-4 py-3.5">
+                    <div className="flex items-center justify-between text-xs text-muted-foreground pt-1 border-t border-border/40">
+                      <div className="flex items-center gap-1 text-[11px]">
+                        <Calendar className="h-3 w-3" />
+                        <span>
+                          {new Date(user.createdAt).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </span>
+                      </div>
+                      <div className="text-[11px] font-medium text-foreground">
+                        ID: <span className="font-mono text-muted-foreground">{user.id.slice(0, 8)}...</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 pt-1">
+                      <div className="flex-1 min-w-0">
+                        <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider block mb-1">
+                          Role
+                        </label>
                         <select
                           value={user.role}
                           disabled={updateRoleMutation.isPending}
@@ -250,44 +264,21 @@ export default function AdminUsersPage() {
                               role: e.target.value as "ADMIN" | "MANAGER" | "CUSTOMER",
                             })
                           }
-                          className="text-xs font-semibold rounded-md border border-border bg-background px-2.5 py-1 text-foreground focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer transition-colors hover:border-primary/50"
+                          className="w-full text-xs font-semibold rounded-lg border border-border bg-background px-2.5 py-1.5 text-foreground focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer transition-colors"
                         >
                           <option value="CUSTOMER">CUSTOMER</option>
-                          <option value="MANAGER">LOGISTICS MANAGER</option>
-                          <option value="ADMIN">ADMINISTRATOR</option>
+                          <option value="MANAGER">MANAGER</option>
+                          <option value="ADMIN">ADMIN</option>
                         </select>
-                      </td>
+                      </div>
 
-                      {/* Status */}
-                      <td className="px-4 py-3.5">
-                        {isBlocked ? (
-                          <Badge className="bg-rose-500/10 text-rose-600 border border-rose-500/20 font-semibold px-2 py-0.5">
-                            BLOCKED
-                          </Badge>
-                        ) : (
-                          <Badge className="bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 font-semibold px-2 py-0.5">
-                            ACTIVE
-                          </Badge>
-                        )}
-                      </td>
-
-                      {/* Date */}
-                      <td className="px-4 py-3.5 text-muted-foreground text-[11px]">
-                        {new Date(user.createdAt).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
-                      </td>
-
-                      {/* Actions */}
-                      <td className="px-4 py-3.5 text-right">
+                      <div className="self-end">
                         {isBlocked ? (
                           <Button
                             variant="outline"
                             size="sm"
                             disabled={toggleStatusMutation.isPending}
-                            className="h-7 px-2.5 text-[11px] font-semibold text-emerald-600 hover:text-emerald-700 hover:bg-emerald-500/10 border-emerald-500/30 gap-1"
+                            className="h-8 px-3 text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:bg-emerald-500/10 border-emerald-500/30 gap-1.5"
                             onClick={() =>
                               toggleStatusMutation.mutate({
                                 id: user.id,
@@ -295,7 +286,7 @@ export default function AdminUsersPage() {
                               })
                             }
                           >
-                            <UserCheck className="h-3 w-3" />
+                            <UserCheck className="h-3.5 w-3.5" />
                             <span>Unblock</span>
                           </Button>
                         ) : (
@@ -306,7 +297,7 @@ export default function AdminUsersPage() {
                               toggleStatusMutation.isPending ||
                               user.role === "ADMIN"
                             }
-                            className="h-7 px-2.5 text-[11px] font-semibold text-rose-600 hover:text-rose-700 hover:bg-rose-500/10 border-rose-500/30 gap-1"
+                            className="h-8 px-3 text-xs font-semibold text-rose-600 hover:text-rose-700 hover:bg-rose-500/10 border-rose-500/30 gap-1.5"
                             onClick={() =>
                               toggleStatusMutation.mutate({
                                 id: user.id,
@@ -314,17 +305,143 @@ export default function AdminUsersPage() {
                               })
                             }
                           >
-                            <UserX className="h-3 w-3" />
+                            <UserX className="h-3.5 w-3.5" />
                             <span>Block User</span>
                           </Button>
                         )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Desktop Table View (hidden md:block) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left text-xs min-w-[760px]">
+                <thead className="bg-muted/40 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border font-bold">
+                  <tr>
+                    <th className="px-4 py-3 whitespace-nowrap">User & Contact</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Access Tier (Role)</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Account State</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Registered On</th>
+                    <th className="px-4 py-3 text-right whitespace-nowrap">Access Controls</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border/60">
+                  {filteredUsers.map((user) => {
+                    const isBlocked = user.status === "BLOCKED";
+
+                    return (
+                      <tr
+                        key={user.id}
+                        className="hover:bg-muted/30 transition-colors"
+                      >
+                        {/* Name & Avatar */}
+                        <td className="px-4 py-3.5">
+                          <div className="flex items-center gap-3">
+                            <div className="h-9 w-9 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0">
+                              {user.name?.slice(0, 2).toUpperCase() || "US"}
+                            </div>
+                            <div>
+                              <span className="font-bold text-foreground text-xs block whitespace-nowrap">
+                                {user.name}
+                              </span>
+                              <span className="text-[10px] text-muted-foreground flex items-center gap-1 whitespace-nowrap">
+                                <Mail className="h-2.5 w-2.5" />
+                                {user.email}
+                              </span>
+                            </div>
+                          </div>
+                        </td>
+
+                        {/* Role Selector */}
+                        <td className="px-4 py-3.5 whitespace-nowrap">
+                          <select
+                            value={user.role}
+                            disabled={updateRoleMutation.isPending}
+                            onChange={(e) =>
+                              updateRoleMutation.mutate({
+                                id: user.id,
+                                role: e.target.value as "ADMIN" | "MANAGER" | "CUSTOMER",
+                              })
+                            }
+                            className="text-xs font-semibold rounded-md border border-border bg-background px-2.5 py-1 text-foreground focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer transition-colors hover:border-primary/50"
+                          >
+                            <option value="CUSTOMER">CUSTOMER</option>
+                            <option value="MANAGER">LOGISTICS MANAGER</option>
+                            <option value="ADMIN">ADMINISTRATOR</option>
+                          </select>
+                        </td>
+
+                        {/* Status */}
+                        <td className="px-4 py-3.5 whitespace-nowrap">
+                          {isBlocked ? (
+                            <Badge className="bg-rose-500/10 text-rose-600 border border-rose-500/20 font-semibold px-2 py-0.5">
+                              BLOCKED
+                            </Badge>
+                          ) : (
+                            <Badge className="bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 font-semibold px-2 py-0.5">
+                              ACTIVE
+                            </Badge>
+                          )}
+                        </td>
+
+                        {/* Date */}
+                        <td className="px-4 py-3.5 text-muted-foreground text-[11px] whitespace-nowrap">
+                          {new Date(user.createdAt).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </td>
+
+                        {/* Actions */}
+                        <td className="px-4 py-3.5 text-right whitespace-nowrap">
+                          {isBlocked ? (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              disabled={toggleStatusMutation.isPending}
+                              className="h-7 px-2.5 text-[11px] font-semibold text-emerald-600 hover:text-emerald-700 hover:bg-emerald-500/10 border-emerald-500/30 gap-1"
+                              onClick={() =>
+                                toggleStatusMutation.mutate({
+                                  id: user.id,
+                                  status: "ACTIVE",
+                                })
+                              }
+                            >
+                              <UserCheck className="h-3 w-3" />
+                              <span>Unblock</span>
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              disabled={
+                                toggleStatusMutation.isPending ||
+                                user.role === "ADMIN"
+                              }
+                              className="h-7 px-2.5 text-[11px] font-semibold text-rose-600 hover:text-rose-700 hover:bg-rose-500/10 border-rose-500/30 gap-1"
+                              onClick={() =>
+                                toggleStatusMutation.mutate({
+                                  id: user.id,
+                                  status: "BLOCKED",
+                                })
+                              }
+                            >
+                              <UserX className="h-3 w-3" />
+                              <span>Block User</span>
+                            </Button>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </div>

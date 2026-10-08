@@ -9,8 +9,10 @@ import {
   Truck,
   BarChart3,
   Sparkles,
+  Search,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 
 export default function HomePage() {
@@ -39,8 +41,28 @@ export default function HomePage() {
               Enterprise-grade warehouse inventory, automated batch tracking, and real-time order processing tailored for modern commerce and logistics.
             </p>
 
+            {/* Hero Quick Search Bar */}
+            <form
+              action="/products"
+              method="GET"
+              className="w-full max-w-lg flex items-center gap-2 pt-1"
+            >
+              <div className="relative flex-1">
+                <Search className="absolute left-3.5 top-3.5 h-4 w-4 text-muted-foreground pointer-events-none" />
+                <Input
+                  name="search"
+                  placeholder="Search products by name or SKU..."
+                  className="pl-10 h-11 bg-background/90 shadow-sm"
+                />
+              </div>
+              <Button type="submit" className="h-11 px-5 gap-1.5 shadow-sm">
+                <Search className="h-4 w-4" />
+                <span>Search</span>
+              </Button>
+            </form>
+
             {/* Dual CTA Buttons */}
-            <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-1">
               <Link href="/products">
                 <Button size="lg" className="gap-2 text-base px-6 h-12 shadow-md">
                   Explore Products

@@ -24,6 +24,14 @@ export const authService = {
   },
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async googleLogin(token: string): Promise<any> {
+    return await apiClient<any>("/auth/google-login", {
+      method: "POST",
+      body: { token },
+    });
+  },
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async resendRegistrationOtp(email: string): Promise<any> {
     return await apiClient<any>("/auth/resend-registration-otp", {
       method: "POST",

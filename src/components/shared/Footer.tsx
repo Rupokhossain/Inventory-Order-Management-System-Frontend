@@ -6,32 +6,34 @@ export default function Footer() {
     <footer className="border-t border-border bg-card text-card-foreground">
       {/* Feature Perks */}
       <div className="container mx-auto max-w-7xl px-4 py-8 border-b border-border/60">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
-          <div className="flex items-center justify-center md:justify-start gap-3">
-            <div className="p-2.5 rounded-lg bg-primary/10 text-primary">
-              <Truck className="h-5 w-5" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+          <div className="flex items-center gap-4 p-4 sm:p-5 rounded-2xl border border-border/70 bg-card/60 hover:bg-card hover:border-primary/40 transition-all shadow-xs">
+            <div className="h-12 w-12 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+              <Truck className="h-6 w-6" />
             </div>
-            <div>
-              <h4 className="text-sm font-semibold">Fast Order Fulfillment</h4>
-              <p className="text-xs text-muted-foreground">Automated inventory-to-shipping pipeline</p>
-            </div>
-          </div>
-          <div className="flex items-center justify-center md:justify-start gap-3">
-            <div className="p-2.5 rounded-lg bg-emerald-500/10 text-emerald-600">
-              <ShieldCheck className="h-5 w-5" />
-            </div>
-            <div>
-              <h4 className="text-sm font-semibold">Enterprise Security</h4>
-              <p className="text-xs text-muted-foreground">Role-based access & encrypted payments</p>
+            <div className="min-w-0">
+              <h4 className="text-sm sm:text-base font-bold text-foreground tracking-tight">Fast Order Fulfillment</h4>
+              <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">Automated inventory-to-shipping pipeline</p>
             </div>
           </div>
-          <div className="flex items-center justify-center md:justify-start gap-3">
-            <div className="p-2.5 rounded-lg bg-indigo-500/10 text-indigo-600">
-              <Headphones className="h-5 w-5" />
+
+          <div className="flex items-center gap-4 p-4 sm:p-5 rounded-2xl border border-border/70 bg-card/60 hover:bg-card hover:border-emerald-500/40 transition-all shadow-xs">
+            <div className="h-12 w-12 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+              <ShieldCheck className="h-6 w-6" />
             </div>
-            <div>
-              <h4 className="text-sm font-semibold">24/7 Supply Support</h4>
-              <p className="text-xs text-muted-foreground">Dedicated logistics & dispatch helpline</p>
+            <div className="min-w-0">
+              <h4 className="text-sm sm:text-base font-bold text-foreground tracking-tight">Enterprise Security</h4>
+              <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">Role-based access & encrypted payments</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 p-4 sm:p-5 rounded-2xl border border-border/70 bg-card/60 hover:bg-card hover:border-purple-500/40 transition-all shadow-xs">
+            <div className="h-12 w-12 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
+              <Headphones className="h-6 w-6" />
+            </div>
+            <div className="min-w-0">
+              <h4 className="text-sm sm:text-base font-bold text-foreground tracking-tight">24/7 Supply Support</h4>
+              <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">Dedicated logistics & dispatch helpline</p>
             </div>
           </div>
         </div>
@@ -58,6 +60,7 @@ export default function Footer() {
               <li><Link href="/" className="hover:text-primary transition-colors">Home</Link></li>
               <li><Link href="/products" className="hover:text-primary transition-colors">Product Catalog</Link></li>
               <li><Link href="/about" className="hover:text-primary transition-colors">About System</Link></li>
+              <li><Link href="/faq" className="hover:text-primary transition-colors">FAQ & Knowledge Base</Link></li>
               <li><Link href="/contact" className="hover:text-primary transition-colors">Contact Support</Link></li>
             </ul>
           </div>

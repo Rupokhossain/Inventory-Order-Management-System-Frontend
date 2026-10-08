@@ -20,6 +20,7 @@ import {
   Package,
   Layers,
   Sparkles,
+  Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -215,26 +216,32 @@ export default function ProductDetailsPage() {
           </div>
 
           {/* Logistics Trust Badges */}
-          <div className="grid grid-cols-3 gap-3 pt-2">
-            <div className="flex items-center gap-2 p-3 rounded-xl border border-border/60 bg-card/60">
-              <Truck className="h-5 w-5 text-primary shrink-0" />
-              <div className="text-xs">
-                <p className="font-semibold text-foreground">Fast Dispatch</p>
-                <p className="text-muted-foreground">Within 24-48 hours</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+            <div className="flex items-center gap-3 p-3.5 rounded-2xl border border-border/70 bg-card/70 backdrop-blur-xs hover:border-primary/40 hover:bg-card/90 transition-all shadow-xs">
+              <div className="h-10 w-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                <Truck className="h-5 w-5" />
+              </div>
+              <div className="min-w-0">
+                <p className="font-bold text-xs sm:text-sm text-foreground tracking-tight">Fast Dispatch</p>
+                <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 truncate">Within 24-48 hours</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 p-3 rounded-xl border border-border/60 bg-card/60">
-              <ShieldCheck className="h-5 w-5 text-emerald-600 shrink-0" />
-              <div className="text-xs">
-                <p className="font-semibold text-foreground">Verified Stock</p>
-                <p className="text-muted-foreground">Direct inventory</p>
+            <div className="flex items-center gap-3 p-3.5 rounded-2xl border border-border/70 bg-card/70 backdrop-blur-xs hover:border-emerald-500/40 hover:bg-card/90 transition-all shadow-xs">
+              <div className="h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                <ShieldCheck className="h-5 w-5" />
+              </div>
+              <div className="min-w-0">
+                <p className="font-bold text-xs sm:text-sm text-foreground tracking-tight">Verified Stock</p>
+                <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 truncate">Direct inventory</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 p-3 rounded-xl border border-border/60 bg-card/60">
-              <RotateCcw className="h-5 w-5 text-primary shrink-0" />
-              <div className="text-xs">
-                <p className="font-semibold text-foreground">Easy Return</p>
-                <p className="text-muted-foreground">7 days policy</p>
+            <div className="flex items-center gap-3 p-3.5 rounded-2xl border border-border/70 bg-card/70 backdrop-blur-xs hover:border-purple-500/40 hover:bg-card/90 transition-all shadow-xs">
+              <div className="h-10 w-10 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
+                <RotateCcw className="h-5 w-5" />
+              </div>
+              <div className="min-w-0">
+                <p className="font-bold text-xs sm:text-sm text-foreground tracking-tight">Easy Return</p>
+                <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 truncate">7 days policy</p>
               </div>
             </div>
           </div>
@@ -313,68 +320,83 @@ export default function ProductDetailsPage() {
                 <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   Order Quantity
                 </label>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center border border-border rounded-lg bg-background">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center border border-border rounded-xl bg-background p-0.5 shadow-xs">
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-10 w-10 rounded-r-none"
+                      className="h-11 w-11 rounded-lg"
                       onClick={handleDecrease}
                       disabled={quantity <= 1}
                     >
-                      <Minus className="h-4 w-4" />
+                      <Minus className="size-4.5" />
                     </Button>
-                    <span className="w-12 text-center font-bold text-sm">
+                    <span className="w-14 text-center font-black text-base sm:text-lg">
                       {quantity}
                     </span>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-10 w-10 rounded-l-none"
+                      className="h-11 w-11 rounded-lg"
                       onClick={handleIncrease}
                       disabled={quantity >= availableStock}
                     >
-                      <Plus className="h-4 w-4" />
+                      <Plus className="size-4.5" />
                     </Button>
                   </div>
-                  <span className="text-xs text-muted-foreground">
-                    Subtotal:{" "}
-                    <strong className="text-foreground text-sm font-bold">
+                  <div className="flex flex-col">
+                    <span className="text-xs text-muted-foreground font-medium">Subtotal</span>
+                    <strong className="text-foreground text-base sm:text-lg font-black">
                       ${(Number(product.price) * quantity).toFixed(2)}
                     </strong>
-                  </span>
+                  </div>
                 </div>
               </div>
             )}
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 pt-2">
-              <Button
-                size="lg"
-                className="flex-1 gap-2 text-sm font-semibold"
-                disabled={isOutOfStock}
-                onClick={handleAddToCart}
-              >
-                <ShoppingCart className="h-4 w-4" />
-                <span>Add to Cart</span>
-              </Button>
-              <Button
-                size="lg"
-                variant="secondary"
-                className="flex-1 text-sm font-semibold"
-                disabled={isOutOfStock}
-                onClick={handleBuyNow}
-              >
-                Buy Now
-              </Button>
+            <div className="flex flex-col gap-3 pt-3">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button
+                  size="xl"
+                  style={{ minHeight: "60px", fontSize: "1.15rem" }}
+                  className="flex-1 w-full gap-3 font-black tracking-wide rounded-2xl shadow-xl shadow-primary/25 hover:shadow-2xl hover:shadow-primary/35 active:scale-[0.98] transition-all cursor-pointer !py-4"
+                  disabled={isOutOfStock}
+                  onClick={handleAddToCart}
+                >
+                  <ShoppingCart className="size-6 shrink-0" />
+                  <span>Add to Cart</span>
+                </Button>
+                <Button
+                  size="xl"
+                  style={{ minHeight: "60px", fontSize: "1.15rem" }}
+                  className="flex-1 w-full gap-3 font-black tracking-wide rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-700 text-white shadow-xl shadow-amber-500/25 hover:shadow-2xl hover:shadow-amber-500/35 active:scale-[0.98] transition-all cursor-pointer border-0 !py-4"
+                  disabled={isOutOfStock}
+                  onClick={handleBuyNow}
+                >
+                  <Zap className="size-6 fill-white text-white shrink-0" />
+                  <span>Buy Now</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="xl"
+                  style={{ minHeight: "60px" }}
+                  className="hidden sm:flex h-[60px] w-[60px] shrink-0 rounded-2xl border-border/80 hover:bg-muted transition-all cursor-pointer items-center justify-center p-0"
+                  onClick={handleShare}
+                  title="Share Product"
+                >
+                  <Share2 className="size-5 text-muted-foreground hover:text-foreground" />
+                </Button>
+              </div>
+
+              {/* Mobile Share Button */}
               <Button
                 variant="outline"
-                size="icon"
-                className="h-11 w-11 shrink-0"
+                className="sm:hidden w-full h-12 gap-2 rounded-xl text-xs font-semibold border-border/80 text-muted-foreground hover:text-foreground cursor-pointer"
                 onClick={handleShare}
-                title="Share Product"
               >
-                <Share2 className="h-4 w-4" />
+                <Share2 className="size-4" />
+                <span>Share this Product</span>
               </Button>
             </div>
           </div>
@@ -383,37 +405,42 @@ export default function ProductDetailsPage() {
 
       {/* Product Details Tabs */}
       <div className="mt-16 border-t border-border pt-10 min-w-0">
-        <div className="flex border-b border-border gap-4 sm:gap-6 overflow-x-auto pb-px">
-          <button
-            onClick={() => setActiveTab("specs")}
-            className={`pb-3 text-sm font-semibold transition-all relative shrink-0 ${
-              activeTab === "specs"
-                ? "text-primary border-b-2 border-primary"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Specifications & Details
-          </button>
-          <button
-            onClick={() => setActiveTab("logistics")}
-            className={`pb-3 text-sm font-semibold transition-all relative shrink-0 ${
-              activeTab === "logistics"
-                ? "text-primary border-b-2 border-primary"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Warehouse & Logistics
-          </button>
-          <button
-            onClick={() => setActiveTab("policy")}
-            className={`pb-3 text-sm font-semibold transition-all relative shrink-0 ${
-              activeTab === "policy"
-                ? "text-primary border-b-2 border-primary"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Shipping & Return Policy
-          </button>
+        <div className="w-full overflow-x-auto scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] pb-2 border-b border-border">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-max">
+            <button
+              type="button"
+              onClick={() => setActiveTab("specs")}
+              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer ${
+                activeTab === "specs"
+                  ? "bg-primary text-primary-foreground shadow-xs"
+                  : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
+            >
+              Specifications & Details
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("logistics")}
+              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer ${
+                activeTab === "logistics"
+                  ? "bg-primary text-primary-foreground shadow-xs"
+                  : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
+            >
+              Warehouse & Logistics
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("policy")}
+              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer ${
+                activeTab === "policy"
+                  ? "bg-primary text-primary-foreground shadow-xs"
+                  : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
+            >
+              Shipping & Return Policy
+            </button>
+          </div>
         </div>
 
         <div className="py-6 min-w-0">

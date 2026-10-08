@@ -192,31 +192,33 @@ export default function CustomerOrdersPage() {
       </div>
 
       {/* Filter Tabs & Search Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-card p-3 rounded-xl border border-border shadow-xs">
-        {/* Tabs */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap flex items-center gap-1.5 ${
-                activeTab === tab.id
-                  ? "bg-primary text-primary-foreground shadow-xs"
-                  : "text-muted-foreground hover:bg-muted/70 hover:text-foreground"
-              }`}
-            >
-              <span>{tab.label}</span>
-              <span
-                className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-card p-3 rounded-xl border border-border shadow-xs">
+        {/* Filter Tabs: 3-column grid on mobile (ALL 6 TABS ALWAYS VISIBLE, NO SCROLLING NEEDED), horizontal flex on desktop */}
+        <div className="w-full md:w-auto">
+          <div className="grid grid-cols-3 md:flex md:items-center gap-1.5 w-full">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-2 md:px-3 py-2 md:py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap flex items-center justify-center md:justify-start gap-1 md:gap-1.5 ${
                   activeTab === tab.id
-                    ? "bg-white/20 text-white"
-                    : "bg-muted text-muted-foreground"
+                    ? "bg-primary text-primary-foreground shadow-xs font-bold"
+                    : "text-muted-foreground hover:bg-muted/70 hover:text-foreground bg-muted/30 md:bg-transparent"
                 }`}
               >
-                {tab.count}
-              </span>
-            </button>
-          ))}
+                <span className="truncate">{tab.id === "ALL" ? "All" : tab.label}</span>
+                <span
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold shrink-0 ${
+                    activeTab === tab.id
+                      ? "bg-white/20 text-white"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  {tab.count}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Search */}
@@ -260,114 +262,215 @@ export default function CustomerOrdersPage() {
             </Link>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-muted/40 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border font-bold">
-                <tr>
-                  <th className="px-4 py-3">Order ID & Date</th>
-                  <th className="px-4 py-3">Items Ordered</th>
-                  <th className="px-4 py-3">Payment</th>
-                  <th className="px-4 py-3">Fulfillment Status</th>
-                  <th className="px-4 py-3">Total Amount</th>
-                  <th className="px-4 py-3 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border/60">
-                {filteredOrders.map((order) => (
-                  <tr
-                    key={order.id}
-                    className="hover:bg-muted/30 transition-colors"
-                  >
-                    {/* Order ID & Date */}
-                    <td className="px-4 py-3.5">
-                      <div className="font-mono font-bold text-foreground">
-                        #{order.id.slice(0, 8)}
+          <>
+            {/* Mobile Cards View (md:hidden) */}
+            <div className="md:hidden divide-y divide-border/60">
+              {filteredOrders.map((order) => (
+                <div key={order.id} className="p-4 space-y-3 bg-card hover:bg-muted/20 transition-colors">
+                  {/* Top Bar: Order ID + Date + Total Price & Status */}
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-0.5 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono font-bold text-foreground text-sm tracking-tight">
+                          #{order.id.slice(0, 8)}
+                        </span>
+                        <span className="text-[11px] text-muted-foreground flex items-center gap-1">
+                          <Calendar className="h-3 w-3 text-muted-foreground/60" />
+                          {new Date(order.createdAt).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </span>
                       </div>
-                      <div className="text-[10px] text-muted-foreground mt-0.5 flex items-center gap-1">
-                        <Calendar className="h-2.5 w-2.5" />
-                        {new Date(order.createdAt).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
-                      </div>
-                    </td>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <span className="font-mono font-black text-foreground text-base block leading-tight">
+                        ${Number(order.totalAmount || 0).toLocaleString()}
+                      </span>
+                      <div className="mt-1 flex justify-end">{getStatusBadge(order.status)}</div>
+                    </div>
+                  </div>
 
+                  {/* Unified Items & Payment Box */}
+                  <div className="rounded-xl border border-border/70 bg-muted/25 p-3 space-y-2">
                     {/* Items */}
-                    <td className="px-4 py-3.5">
-                      <div className="space-y-1">
-                        {order.orderItems?.slice(0, 2).map((item: any, i: number) => (
+                    {order.orderItems && order.orderItems.length > 0 && (
+                      <div className="space-y-1.5">
+                        {order.orderItems.slice(0, 2).map((item: any, i: number) => (
                           <div
                             key={i}
-                            className="text-foreground font-medium flex items-center gap-1.5"
+                            className="text-foreground font-medium flex items-center gap-2 text-xs"
                           >
-                            <span className="font-bold text-primary">
+                            <Package className="h-3.5 w-3.5 text-primary shrink-0" />
+                            <span className="font-bold text-primary text-xs shrink-0">
                               {item.quantity}x
                             </span>
-                            <span className="truncate max-w-[180px]">
+                            <span className="truncate text-foreground font-medium">
                               {item.product?.name || "Product Item"}
                             </span>
                           </div>
                         ))}
-                        {(order.orderItems?.length || 0) > 2 && (
-                          <span className="text-[10px] text-muted-foreground italic">
+                        {order.orderItems.length > 2 && (
+                          <span className="text-[10px] text-muted-foreground italic block pl-5">
                             +{order.orderItems.length - 2} more item(s)
                           </span>
                         )}
                       </div>
-                    </td>
+                    )}
 
                     {/* Payment Info */}
-                    <td className="px-4 py-3.5">
-                      <div className="flex flex-col gap-1">
-                        <span className="font-semibold text-foreground uppercase tracking-wider text-[10px]">
+                    <div className="flex items-center justify-between pt-2 border-t border-border/50 text-xs">
+                      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                        Payment:
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-foreground uppercase text-[10px]">
                           {order.payment?.paymentMethod || "BKASH"}
                         </span>
-                        <div>{getPaymentStatusBadge(order.payment?.status)}</div>
+                        {getPaymentStatusBadge(order.payment?.status)}
                       </div>
-                    </td>
+                    </div>
+                  </div>
 
-                    {/* Fulfillment Status */}
-                    <td className="px-4 py-3.5">{getStatusBadge(order.status)}</td>
+                  {/* Actions */}
+                  <div className="flex items-center justify-end gap-2 pt-1">
+                    {order.status === "PENDING" && order.payment?.status !== "PAID" && (
+                      <Button
+                        size="sm"
+                        disabled={payingOrderId === order.id}
+                        onClick={() => handleQuickPay(order.id)}
+                        className="h-8.5 px-3 text-xs font-semibold gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs cursor-pointer flex-1 rounded-lg"
+                        title="Pay & settle this pending order"
+                      >
+                        <Zap className="h-3.5 w-3.5" />
+                        <span>{payingOrderId === order.id ? "Settling..." : "Pay Now"}</span>
+                      </Button>
+                    )}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-8.5 px-3 text-xs gap-1.5 bg-background shadow-2xs hover:bg-primary hover:text-primary-foreground transition-all flex-1 rounded-lg"
+                      onClick={() => setSelectedInvoiceOrder(order)}
+                    >
+                      <Receipt className="h-3.5 w-3.5" />
+                      <span>Invoice Receipt</span>
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-                    {/* Total Amount */}
-                    <td className="px-4 py-3.5">
-                      <span className="font-bold text-foreground text-sm">
-                        ${Number(order.totalAmount || 0).toLocaleString()}
-                      </span>
-                    </td>
-
-                    {/* Actions */}
-                    <td className="px-4 py-3.5 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        {order.status === "PENDING" && order.payment?.status !== "PAID" && (
-                          <Button
-                            size="sm"
-                            disabled={payingOrderId === order.id}
-                            onClick={() => handleQuickPay(order.id)}
-                            className="h-8 px-2.5 text-xs font-semibold gap-1 bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs cursor-pointer"
-                            title="Pay & settle this pending order"
-                          >
-                            <Zap className="h-3 w-3" />
-                            <span>{payingOrderId === order.id ? "Settling..." : "Pay Now"}</span>
-                          </Button>
-                        )}
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="h-8 px-2.5 text-xs gap-1.5 bg-background shadow-2xs hover:bg-primary hover:text-primary-foreground transition-all"
-                          onClick={() => setSelectedInvoiceOrder(order)}
-                        >
-                          <Receipt className="h-3.5 w-3.5" />
-                          <span>Invoice</span>
-                        </Button>
-                      </div>
-                    </td>
+            {/* Desktop Table View (hidden md:block) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left text-xs min-w-[850px]">
+                <thead className="bg-muted/40 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border font-bold">
+                  <tr>
+                    <th className="px-4 py-3 whitespace-nowrap">Order ID & Date</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Items Ordered</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Payment</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Fulfillment Status</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Total Amount</th>
+                    <th className="px-4 py-3 text-right whitespace-nowrap">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-border/60">
+                  {filteredOrders.map((order) => (
+                    <tr
+                      key={order.id}
+                      className="hover:bg-muted/30 transition-colors"
+                    >
+                      {/* Order ID & Date */}
+                      <td className="px-4 py-3.5 whitespace-nowrap">
+                        <div className="font-mono font-bold text-foreground">
+                          #{order.id.slice(0, 8)}
+                        </div>
+                        <div className="text-[10px] text-muted-foreground mt-0.5 flex items-center gap-1">
+                          <Calendar className="h-2.5 w-2.5" />
+                          {new Date(order.createdAt).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </div>
+                      </td>
+
+                      {/* Items */}
+                      <td className="px-4 py-3.5">
+                        <div className="space-y-1">
+                          {order.orderItems?.slice(0, 2).map((item: any, i: number) => (
+                            <div
+                              key={i}
+                              className="text-foreground font-medium flex items-center gap-1.5 whitespace-nowrap"
+                            >
+                              <span className="font-bold text-primary">
+                                {item.quantity}x
+                              </span>
+                              <span className="truncate max-w-[180px]">
+                                {item.product?.name || "Product Item"}
+                              </span>
+                            </div>
+                          ))}
+                          {(order.orderItems?.length || 0) > 2 && (
+                            <span className="text-[10px] text-muted-foreground italic whitespace-nowrap">
+                              +{order.orderItems.length - 2} more item(s)
+                            </span>
+                          )}
+                        </div>
+                      </td>
+
+                      {/* Payment Info */}
+                      <td className="px-4 py-3.5 whitespace-nowrap">
+                        <div className="flex flex-col gap-1">
+                          <span className="font-semibold text-foreground uppercase tracking-wider text-[10px]">
+                            {order.payment?.paymentMethod || "BKASH"}
+                          </span>
+                          <div>{getPaymentStatusBadge(order.payment?.status)}</div>
+                        </div>
+                      </td>
+
+                      {/* Fulfillment Status */}
+                      <td className="px-4 py-3.5 whitespace-nowrap">{getStatusBadge(order.status)}</td>
+
+                      {/* Total Amount */}
+                      <td className="px-4 py-3.5 whitespace-nowrap">
+                        <span className="font-bold text-foreground text-sm font-mono">
+                          ${Number(order.totalAmount || 0).toLocaleString()}
+                        </span>
+                      </td>
+
+                      {/* Actions */}
+                      <td className="px-4 py-3.5 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-2">
+                          {order.status === "PENDING" && order.payment?.status !== "PAID" && (
+                            <Button
+                              size="sm"
+                              disabled={payingOrderId === order.id}
+                              onClick={() => handleQuickPay(order.id)}
+                              className="h-8 px-2.5 text-xs font-semibold gap-1 bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs cursor-pointer"
+                              title="Pay & settle this pending order"
+                            >
+                              <Zap className="h-3 w-3" />
+                              <span>{payingOrderId === order.id ? "Settling..." : "Pay Now"}</span>
+                            </Button>
+                          )}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-8 px-2.5 text-xs gap-1.5 bg-background shadow-2xs hover:bg-primary hover:text-primary-foreground transition-all"
+                            onClick={() => setSelectedInvoiceOrder(order)}
+                          >
+                            <Receipt className="h-3.5 w-3.5" />
+                            <span>Invoice</span>
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 

@@ -705,18 +705,17 @@ export default function CheckoutPage() {
               <CardFooter className="p-5 pt-0 flex flex-col gap-3">
                 <Button
                   type="submit"
-                  size="lg"
                   disabled={isSubmitting || !isAuthenticated}
-                  className="w-full text-sm font-semibold shadow-md gap-2"
+                  className="w-full h-13 sm:h-14 text-base sm:text-lg font-black tracking-wide shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35 gap-2.5 rounded-xl transition-all cursor-pointer"
                 >
                   {isSubmitting ? (
                     <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <Loader2 className="size-5 animate-spin" />
                       <span>Placing Warehouse Order...</span>
                     </>
                   ) : (
                     <>
-                      <CheckCircle2 className="h-4 w-4" />
+                      <CheckCircle2 className="size-5" />
                       <span>Confirm & Place Order</span>
                     </>
                   )}

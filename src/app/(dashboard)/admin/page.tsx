@@ -17,6 +17,7 @@ import {
   AlertCircle,
   Truck,
   Sparkles,
+  MessageSquare,
 } from "lucide-react";
 import {
   AreaChart,
@@ -92,37 +93,37 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Welcome Banner */}
-      <div className="rounded-2xl border border-primary/20 bg-linear-to-r from-primary/10 via-primary/5 to-background p-6 sm:p-7 relative overflow-hidden shadow-xs">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="space-y-1.5">
+      <div className="rounded-2xl border border-primary/20 bg-linear-to-r from-primary/10 via-primary/5 to-background p-6 sm:p-8 relative overflow-hidden shadow-xs">
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
+          <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary/15 text-primary border border-primary/30 flex items-center gap-1">
-                <Calendar className="h-3 w-3" />
+              <span className="text-xs font-semibold px-3 py-1 rounded-full bg-primary/15 text-primary border border-primary/30 flex items-center gap-1.5">
+                <Calendar className="h-3.5 w-3.5" />
                 {todayStr}
               </span>
-              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[11px] font-medium text-emerald-600">
+              <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-xs font-semibold text-emerald-600">
                 Central Node Online
               </span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-foreground">
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
               Executive Logistics & Intelligence Suite
             </h1>
-            <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl">
+            <p className="text-sm sm:text-base text-muted-foreground max-w-2xl leading-relaxed">
               Real-time platform revenue velocity, warehouse inventory valuation, and central user governance.
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-3 flex-wrap">
             <Link href="/admin/users">
-              <Button size="sm" className="gap-1.5 text-xs font-semibold shadow-xs">
-                <Users className="h-4 w-4" />
+              <Button size="sm" className="gap-2 text-sm font-semibold shadow-xs h-10 px-4">
+                <Users className="h-4.5 w-4.5" />
                 <span>User Directory</span>
               </Button>
             </Link>
             <Link href="/admin/inventory">
-              <Button variant="outline" size="sm" className="gap-1.5 text-xs font-semibold">
-                <Boxes className="h-4 w-4 text-primary" />
+              <Button variant="outline" size="sm" className="gap-2 text-sm font-semibold h-10 px-4 border-border/80">
+                <Boxes className="h-4.5 w-4.5 text-primary" />
                 <span>Manage Products</span>
               </Button>
             </Link>
@@ -131,106 +132,106 @@ export default function AdminDashboard() {
       </div>
 
       {/* Invenza 4 KPI Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         {/* Card 1: Gross Revenue */}
-        <div className="p-5 rounded-xl bg-card border border-border/80 shadow-xs flex flex-col justify-between space-y-3">
+        <div className="p-5 sm:p-6 rounded-2xl bg-card border border-border/80 shadow-xs flex flex-col justify-between space-y-3">
           <div className="flex items-start justify-between">
-            <div className="space-y-1">
-              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <div className="space-y-1.5">
+              <span className="text-xs sm:text-sm font-bold text-muted-foreground uppercase tracking-wider">
                 Platform Gross Volume
               </span>
-              <div className="text-2xl font-black text-foreground">
+              <div className="text-2xl sm:text-3xl font-black text-foreground">
                 ${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
               </div>
             </div>
-            <div className="h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold">
-              <DollarSign className="h-5 w-5" />
+            <div className="h-11 w-11 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold">
+              <DollarSign className="h-6 w-6" />
             </div>
           </div>
-          <div className="space-y-1.5 pt-2 border-t border-border/50">
-            <div className="flex justify-between text-[11px] font-medium text-muted-foreground">
+          <div className="space-y-2 pt-2.5 border-t border-border/50">
+            <div className="flex justify-between text-xs font-medium text-muted-foreground">
               <span>Monthly Target</span>
               <span className="text-emerald-600 font-bold">+18.4% vs last period</span>
             </div>
-            <div className="w-full bg-muted rounded-full h-1 overflow-hidden">
+            <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
               <div className="bg-emerald-500 h-full w-[82%]" />
             </div>
           </div>
         </div>
 
         {/* Card 2: Registered Accounts */}
-        <div className="p-5 rounded-xl bg-card border border-border/80 shadow-xs flex flex-col justify-between space-y-3">
+        <div className="p-5 sm:p-6 rounded-2xl bg-card border border-border/80 shadow-xs flex flex-col justify-between space-y-3">
           <div className="flex items-start justify-between">
-            <div className="space-y-1">
-              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <div className="space-y-1.5">
+              <span className="text-xs sm:text-sm font-bold text-muted-foreground uppercase tracking-wider">
                 Total Registered Users
               </span>
-              <div className="text-2xl font-black text-foreground">
+              <div className="text-2xl sm:text-3xl font-black text-foreground">
                 {users.length} Users
               </div>
             </div>
-            <div className="h-10 w-10 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center font-bold">
-              <Users className="h-5 w-5" />
+            <div className="h-11 w-11 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center font-bold">
+              <Users className="h-6 w-6" />
             </div>
           </div>
-          <div className="space-y-1.5 pt-2 border-t border-border/50">
-            <div className="flex justify-between text-[11px] font-medium text-muted-foreground">
+          <div className="space-y-2 pt-2.5 border-t border-border/50">
+            <div className="flex justify-between text-xs font-medium text-muted-foreground">
               <span>Account Status</span>
               <span className="text-blue-600 font-bold">100% Active Directory</span>
             </div>
-            <div className="w-full bg-muted rounded-full h-1 overflow-hidden">
+            <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
               <div className="bg-blue-500 h-full w-[90%]" />
             </div>
           </div>
         </div>
 
         {/* Card 3: Total Orders */}
-        <div className="p-5 rounded-xl bg-card border border-border/80 shadow-xs flex flex-col justify-between space-y-3">
+        <div className="p-5 sm:p-6 rounded-2xl bg-card border border-border/80 shadow-xs flex flex-col justify-between space-y-3">
           <div className="flex items-start justify-between">
-            <div className="space-y-1">
-              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <div className="space-y-1.5">
+              <span className="text-xs sm:text-sm font-bold text-muted-foreground uppercase tracking-wider">
                 Dispatches Processed
               </span>
-              <div className="text-2xl font-black text-foreground">
+              <div className="text-2xl sm:text-3xl font-black text-foreground">
                 {orders.length} Dispatches
               </div>
             </div>
-            <div className="h-10 w-10 rounded-xl bg-purple-500/10 text-purple-600 flex items-center justify-center font-bold">
-              <ShoppingBag className="h-5 w-5" />
+            <div className="h-11 w-11 rounded-xl bg-purple-500/10 text-purple-600 flex items-center justify-center font-bold">
+              <ShoppingBag className="h-6 w-6" />
             </div>
           </div>
-          <div className="space-y-1.5 pt-2 border-t border-border/50">
-            <div className="flex justify-between text-[11px] font-medium text-muted-foreground">
+          <div className="space-y-2 pt-2.5 border-t border-border/50">
+            <div className="flex justify-between text-xs font-medium text-muted-foreground">
               <span>Fulfillment rate</span>
               <span className="text-purple-600 font-bold">96.8% Success</span>
             </div>
-            <div className="w-full bg-muted rounded-full h-1 overflow-hidden">
+            <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
               <div className="bg-purple-500 h-full w-[75%]" />
             </div>
           </div>
         </div>
 
         {/* Card 4: Inventory Valuation */}
-        <div className="p-5 rounded-xl bg-card border border-border/80 shadow-xs flex flex-col justify-between space-y-3">
+        <div className="p-5 sm:p-6 rounded-2xl bg-card border border-border/80 shadow-xs flex flex-col justify-between space-y-3">
           <div className="flex items-start justify-between">
-            <div className="space-y-1">
-              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            <div className="space-y-1.5">
+              <span className="text-xs sm:text-sm font-bold text-muted-foreground uppercase tracking-wider">
                 Warehouse Stock Asset
               </span>
-              <div className="text-2xl font-black text-foreground">
+              <div className="text-2xl sm:text-3xl font-black text-foreground">
                 ${totalInventoryValuation.toLocaleString(undefined, { minimumFractionDigits: 0 })}
               </div>
             </div>
-            <div className="h-10 w-10 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center font-bold">
-              <Boxes className="h-5 w-5" />
+            <div className="h-11 w-11 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center font-bold">
+              <Boxes className="h-6 w-6" />
             </div>
           </div>
-          <div className="space-y-1.5 pt-2 border-t border-border/50">
-            <div className="flex justify-between text-[11px] font-medium text-muted-foreground">
+          <div className="space-y-2 pt-2.5 border-t border-border/50">
+            <div className="flex justify-between text-xs font-medium text-muted-foreground">
               <span>Available Units</span>
               <span className="text-amber-600 font-bold">{totalStockUnits} Total SKU Units</span>
             </div>
-            <div className="w-full bg-muted rounded-full h-1 overflow-hidden">
+            <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
               <div className="bg-amber-500 h-full w-[88%]" />
             </div>
           </div>
@@ -344,34 +345,34 @@ export default function AdminDashboard() {
             </Link>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="text-[10px] uppercase font-bold text-muted-foreground border-b border-border">
+          <div className="overflow-x-auto -mx-1 sm:mx-0">
+            <table className="w-full min-w-[520px] text-left text-xs">
+              <thead className="text-[11px] uppercase font-bold text-muted-foreground border-b border-border">
                 <tr>
-                  <th className="py-2.5">User</th>
-                  <th className="py-2.5">Role</th>
-                  <th className="py-2.5">Status</th>
-                  <th className="py-2.5 text-right">Joined</th>
+                  <th className="py-2.5 px-2 whitespace-nowrap">User</th>
+                  <th className="py-2.5 px-2 whitespace-nowrap">Role</th>
+                  <th className="py-2.5 px-2 whitespace-nowrap">Status</th>
+                  <th className="py-2.5 px-2 text-right whitespace-nowrap">Joined</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/60">
                 {users.slice(0, 4).map((u) => (
-                  <tr key={u.id}>
-                    <td className="py-2.5">
-                      <p className="font-bold text-foreground">{u.name}</p>
-                      <p className="text-[10px] text-muted-foreground">{u.email}</p>
+                  <tr key={u.id} className="hover:bg-muted/30 transition-colors">
+                    <td className="py-2.5 px-2">
+                      <p className="font-bold text-foreground whitespace-nowrap">{u.name}</p>
+                      <p className="text-[11px] text-muted-foreground whitespace-nowrap">{u.email}</p>
                     </td>
-                    <td className="py-2.5">
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
+                    <td className="py-2.5 px-2 whitespace-nowrap">
+                      <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20 whitespace-nowrap inline-block">
                         {u.role}
                       </span>
                     </td>
-                    <td className="py-2.5">
-                      <span className="text-[10px] font-semibold text-emerald-600 flex items-center gap-1">
-                        <CheckCircle2 className="h-3 w-3" /> {u.status}
+                    <td className="py-2.5 px-2 whitespace-nowrap">
+                      <span className="text-[11px] font-semibold text-emerald-600 inline-flex items-center gap-1.5 whitespace-nowrap">
+                        <CheckCircle2 className="h-3.5 w-3.5 shrink-0" /> {u.status}
                       </span>
                     </td>
-                    <td className="py-2.5 text-right text-muted-foreground text-[10px]">
+                    <td className="py-2.5 px-2 text-right text-muted-foreground text-[11px] whitespace-nowrap">
                       {new Date(u.createdAt).toLocaleDateString()}
                     </td>
                   </tr>
@@ -399,6 +400,18 @@ export default function AdminDashboard() {
               </div>
               <span>→</span>
             </Link>
+
+            <Link
+              href="/admin/inquiries"
+              className="flex items-center justify-between p-2.5 rounded-lg border border-border/60 hover:bg-muted/50 transition-colors text-xs font-semibold"
+            >
+              <div className="flex items-center gap-2">
+                <MessageSquare className="h-4 w-4 text-blue-500" />
+                <span>Customer Inquiries & Support</span>
+              </div>
+              <span>→</span>
+            </Link>
+
 
             <Link
               href="/admin/users"

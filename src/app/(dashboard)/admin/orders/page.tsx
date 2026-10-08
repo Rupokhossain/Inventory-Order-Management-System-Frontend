@@ -135,8 +135,8 @@ export default function AdminOrdersPage() {
   };
 
   const getPaymentBadge = (order: any) => {
-    const payment = order.payments?.[0];
-    const status = payment?.status || (order.paymentStatus ? order.paymentStatus : "PENDING");
+    const payment = order.payment || order.payments?.[0];
+    const status = (payment?.status || order.paymentStatus || "PENDING")?.toUpperCase();
     if (status === "PAID" || status === "COMPLETED") {
       return (
         <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 border border-emerald-500/30">
@@ -199,100 +199,103 @@ export default function AdminOrdersPage() {
 
       {/* KPI Cards Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div className="p-4 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between">
-          <div className="space-y-1">
-            <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
-              Total Order Volume
+        <div className="p-3.5 sm:p-4 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between gap-2 min-w-0">
+          <div className="space-y-0.5 sm:space-y-1 min-w-0">
+            <span className="text-[10px] sm:text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block truncate">
+              Total Orders
             </span>
-            <div className="text-2xl font-black text-foreground">{orders.length}</div>
-            <span className="text-[10px] text-muted-foreground">All customer orders</span>
+            <div className="text-lg sm:text-2xl font-black text-foreground truncate">{orders.length}</div>
+            <span className="text-[10px] text-muted-foreground truncate block">All volume</span>
           </div>
-          <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold">
-            <ShoppingBag className="h-5 w-5" />
+          <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold shrink-0">
+            <ShoppingBag className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
           </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between">
-          <div className="space-y-1">
-            <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+        <div className="p-3.5 sm:p-4 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between gap-2 min-w-0">
+          <div className="space-y-0.5 sm:space-y-1 min-w-0">
+            <span className="text-[10px] sm:text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block truncate">
               Fulfilled Revenue
             </span>
-            <div className="text-2xl font-black text-emerald-600">
+            <div className="text-lg sm:text-2xl font-black text-emerald-600 truncate">
               ${totalRevenue.toLocaleString()}
             </div>
-            <span className="text-[10px] text-muted-foreground">Settled & in pipeline</span>
+            <span className="text-[10px] text-muted-foreground truncate block">Settled volume</span>
           </div>
-          <div className="h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold">
-            <DollarSign className="h-5 w-5" />
+          <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold shrink-0">
+            <DollarSign className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
           </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between">
-          <div className="space-y-1">
-            <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
-              Pending Verification
+        <div className="p-3.5 sm:p-4 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between gap-2 min-w-0">
+          <div className="space-y-0.5 sm:space-y-1 min-w-0">
+            <span className="text-[10px] sm:text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block truncate">
+              Pending Action
             </span>
-            <div className="text-2xl font-black text-amber-600">{pendingCount}</div>
-            <span className="text-[10px] text-muted-foreground">Awaiting manager action</span>
+            <div className="text-lg sm:text-2xl font-black text-amber-600 truncate">{pendingCount}</div>
+            <span className="text-[10px] text-muted-foreground truncate block">Awaiting review</span>
           </div>
-          <div className="h-10 w-10 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center font-bold">
-            <Clock className="h-5 w-5" />
+          <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center font-bold shrink-0">
+            <Clock className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
           </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between">
-          <div className="space-y-1">
-            <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+        <div className="p-3.5 sm:p-4 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between gap-2 min-w-0">
+          <div className="space-y-0.5 sm:space-y-1 min-w-0">
+            <span className="text-[10px] sm:text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block truncate">
               Delivered Orders
             </span>
-            <div className="text-2xl font-black text-blue-600">{deliveredCount}</div>
-            <span className="text-[10px] text-muted-foreground">Completed shipments</span>
+            <div className="text-lg sm:text-2xl font-black text-blue-600 truncate">{deliveredCount}</div>
+            <span className="text-[10px] text-muted-foreground truncate block">Completed</span>
           </div>
-          <div className="h-10 w-10 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center font-bold">
-            <Package className="h-5 w-5" />
+          <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center font-bold shrink-0">
+            <Package className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
           </div>
         </div>
       </div>
 
       {/* Filter Tabs and Search Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-card p-3 rounded-xl border border-border shadow-xs">
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-          {[
-            { id: "ALL", label: "All Orders", count: orders.length },
-            { id: "PENDING", label: "Pending", count: pendingCount },
-            { id: "CONFIRMED", label: "Confirmed", count: confirmedCount },
-            { id: "PROCESSING", label: "In Transit", count: processingCount },
-            { id: "DELIVERED", label: "Delivered", count: deliveredCount },
-            {
-              id: "CANCELLED",
-              label: "Cancelled",
-              count: orders.filter((o) => o.status === "CANCELLED").length,
-            },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap flex items-center gap-1.5 ${
-                activeTab === tab.id
-                  ? "bg-primary text-primary-foreground shadow-xs font-bold"
-                  : "text-muted-foreground hover:bg-muted/70 hover:text-foreground"
-              }`}
-            >
-              <span>{tab.label}</span>
-              <span
-                className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+        {/* Filter Tabs: 3-column grid on mobile (ALL 6 TABS ALWAYS VISIBLE, NO SCROLLING NEEDED), horizontal flex on desktop */}
+        <div className="w-full sm:w-auto">
+          <div className="grid grid-cols-3 sm:flex sm:items-center gap-1.5 w-full">
+            {[
+              { id: "ALL", label: "All", count: orders.length },
+              { id: "PENDING", label: "Pending", count: pendingCount },
+              { id: "CONFIRMED", label: "Confirmed", count: confirmedCount },
+              { id: "PROCESSING", label: "In Transit", count: processingCount },
+              { id: "DELIVERED", label: "Delivered", count: deliveredCount },
+              {
+                id: "CANCELLED",
+                label: "Cancelled",
+                count: orders.filter((o) => o.status === "CANCELLED").length,
+              },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-2 sm:px-3 py-2 sm:py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap flex items-center justify-center sm:justify-start gap-1 sm:gap-1.5 ${
                   activeTab === tab.id
-                    ? "bg-white/20 text-white"
-                    : "bg-muted text-muted-foreground"
+                    ? "bg-primary text-primary-foreground shadow-xs font-bold"
+                    : "text-muted-foreground hover:bg-muted/70 hover:text-foreground bg-muted/30 sm:bg-transparent"
                 }`}
               >
-                {tab.count}
-              </span>
-            </button>
-          ))}
+                <span className="truncate">{tab.label}</span>
+                <span
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold shrink-0 ${
+                    activeTab === tab.id
+                      ? "bg-white/20 text-white"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  {tab.count}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="relative min-w-[260px]">
+        <div className="relative min-w-[240px]">
           <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
           <Input
             placeholder="Search Order ID, customer, address..."
@@ -303,7 +306,7 @@ export default function AdminOrdersPage() {
         </div>
       </div>
 
-      {/* Orders Table */}
+      {/* Orders Container */}
       <div className="bg-card rounded-xl border border-border shadow-xs overflow-hidden">
         {isLoading ? (
           <div className="p-12 text-center space-y-3">
@@ -321,137 +324,256 @@ export default function AdminOrdersPage() {
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-muted/40 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border font-bold">
-                <tr>
-                  <th className="px-4 py-3">Order Details</th>
-                  <th className="px-4 py-3">Customer Identity</th>
-                  <th className="px-4 py-3">Purchased Items</th>
-                  <th className="px-4 py-3">Total Cost</th>
-                  <th className="px-4 py-3">Payment</th>
-                  <th className="px-4 py-3">Fulfillment Status</th>
-                  <th className="px-4 py-3 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border/60">
-                {filteredOrders.map((order) => (
-                  <tr
-                    key={order.id}
-                    className="hover:bg-muted/30 transition-colors"
-                  >
-                    {/* Order ID & Date */}
-                    <td className="px-4 py-3.5">
-                      <span className="font-mono font-bold text-foreground text-xs block">
-                        #{order.id.slice(0, 8)}
-                      </span>
-                      <span className="text-[10px] text-muted-foreground flex items-center gap-1 mt-0.5">
-                        <Calendar className="h-3 w-3" />
-                        {new Date(order.createdAt).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
-                      </span>
-                    </td>
-
-                    {/* Customer */}
-                    <td className="px-4 py-3.5">
+          <>
+            {/* 1. MOBILE RESPONSIVE ORDER CARDS (Phone Screens) */}
+            <div className="md:hidden divide-y divide-border/60">
+              {filteredOrders.map((order) => (
+                <div key={order.id} className="p-4 space-y-3 bg-card hover:bg-muted/20 transition-colors">
+                  {/* Card Header: Order ID + Date + Total Price & Payment Badge */}
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-0.5 min-w-0">
                       <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center text-[10px] shrink-0">
-                          {order.customer?.name
-                            ? order.customer.name.slice(0, 2).toUpperCase()
-                            : "CU"}
-                        </div>
-                        <div className="min-w-0">
-                          <p className="font-bold text-foreground text-xs truncate max-w-[140px]">
-                            {order.customer?.name || "Customer User"}
-                          </p>
-                          <p className="text-[10px] text-muted-foreground truncate max-w-[140px]">
-                            {order.customer?.email}
-                          </p>
-                        </div>
+                        <span className="font-mono font-bold text-foreground text-sm tracking-tight">
+                          #{order.id.slice(0, 8)}
+                        </span>
+                        <span className="text-[11px] text-muted-foreground flex items-center gap-1">
+                          <Calendar className="h-3 w-3 text-muted-foreground/60" />
+                          {new Date(order.createdAt).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </span>
                       </div>
-                    </td>
+                    </div>
 
-                    {/* Items */}
-                    <td className="px-4 py-3.5">
-                      <div className="space-y-1">
-                        {order.orderItems?.slice(0, 2).map((item: any, i: number) => (
-                          <div
-                            key={i}
-                            className="text-foreground font-medium flex items-center gap-1.5"
-                          >
-                            <span className="font-bold text-primary">
-                              {item.quantity}x
-                            </span>
-                            <span className="truncate max-w-[140px]">
-                              {item.product?.name || "Product Item"}
-                            </span>
-                          </div>
-                        ))}
-                        {(order.orderItems?.length || 0) > 2 && (
-                          <span className="text-[10px] text-muted-foreground italic">
-                            +{order.orderItems.length - 2} more item(s)
+                    <div className="text-right shrink-0">
+                      <span className="font-mono font-black text-foreground text-base block leading-tight">
+                        ${Number(order.totalAmount || 0).toLocaleString()}
+                      </span>
+                      <div className="mt-1 flex justify-end">{getPaymentBadge(order)}</div>
+                    </div>
+                  </div>
+
+                  {/* Unified Customer & Product Details Box */}
+                  <div className="rounded-xl border border-border/70 bg-muted/25 p-3 space-y-2.5">
+                    {/* Customer Info */}
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="h-8 w-8 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center text-xs shrink-0 ring-1 ring-primary/20">
+                        {order.customer?.name
+                          ? order.customer.name.slice(0, 2).toUpperCase()
+                          : "CU"}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-bold text-foreground text-xs truncate leading-snug">
+                          {order.customer?.name || "Customer User"}
+                        </p>
+                        <p className="text-[11px] text-muted-foreground truncate leading-snug">
+                          {order.customer?.email}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Ordered Items Row */}
+                    {order.orderItems && order.orderItems.length > 0 && (
+                      <div className="pt-2 border-t border-border/50 text-xs flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                          <Package className="h-3.5 w-3.5 text-primary shrink-0" />
+                          <span className="font-bold text-primary text-xs shrink-0">
+                            {order.orderItems[0].quantity}x
+                          </span>
+                          <span className="text-foreground font-medium text-xs truncate">
+                            {order.orderItems[0].product?.name || "Product Item"}
+                          </span>
+                        </div>
+                        {order.orderItems.length > 1 && (
+                          <span className="text-[10px] font-semibold text-muted-foreground bg-muted px-2 py-0.5 rounded-full shrink-0 border border-border/50">
+                            +{order.orderItems.length - 1} more
                           </span>
                         )}
                       </div>
-                    </td>
+                    )}
+                  </div>
 
-                    {/* Total Cost */}
-                    <td className="px-4 py-3.5">
-                      <span className="font-mono font-black text-foreground text-sm">
-                        ${Number(order.totalAmount || 0).toLocaleString()}
+                  {/* Action Bar: Status Pill & Details Button */}
+                  <div className="flex items-center justify-between gap-2 pt-1">
+                    {/* Interactive Status Changer with clean label */}
+                    <div className="flex items-center gap-1.5 flex-1 min-w-0 bg-background border border-border/80 rounded-lg px-2.5 py-1.5 shadow-2xs">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground shrink-0">
+                        Status:
                       </span>
-                    </td>
-
-                    {/* Payment Status */}
-                    <td className="px-4 py-3.5">
-                      {getPaymentBadge(order)}
-                    </td>
-
-                    {/* Status Changer Dropdown */}
-                    <td className="px-4 py-3.5">
-                      <div className="flex items-center gap-2">
-                        <select
-                          value={order.status}
-                          disabled={updateStatusMutation.isPending}
-                          onChange={(e) =>
-                            updateStatusMutation.mutate({
-                              id: order.id,
-                              status: e.target.value,
-                            })
-                          }
-                          className="h-8 rounded-lg border border-input bg-background px-2.5 py-1 text-xs font-semibold shadow-xs focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring"
-                        >
-                          <option value="PENDING">PENDING</option>
-                          <option value="CONFIRMED">CONFIRMED</option>
-                          <option value="PROCESSING">PROCESSING</option>
-                          <option value="SHIPPED">SHIPPED</option>
-                          <option value="DELIVERED">DELIVERED</option>
-                          <option value="CANCELLED">CANCELLED</option>
-                        </select>
-                        <div>{getStatusBadge(order.status)}</div>
-                      </div>
-                    </td>
-
-                    {/* Actions */}
-                    <td className="px-4 py-3.5 text-right">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setSelectedOrderModal(order)}
-                        className="h-8 gap-1.5 text-xs text-primary font-semibold hover:bg-primary/10"
+                      <select
+                        value={order.status}
+                        disabled={updateStatusMutation.isPending}
+                        onChange={(e) =>
+                          updateStatusMutation.mutate({
+                            id: order.id,
+                            status: e.target.value,
+                          })
+                        }
+                        className="w-full text-xs font-bold bg-transparent text-foreground focus:outline-none cursor-pointer"
                       >
-                        <Eye className="h-3.5 w-3.5" />
-                        <span>Inspect</span>
-                      </Button>
-                    </td>
+                        <option value="PENDING">PENDING</option>
+                        <option value="CONFIRMED">CONFIRMED</option>
+                        <option value="PROCESSING">IN TRANSIT</option>
+                        <option value="SHIPPED">SHIPPED</option>
+                        <option value="DELIVERED">DELIVERED</option>
+                        <option value="CANCELLED">CANCELLED</option>
+                      </select>
+                    </div>
+
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSelectedOrderModal(order)}
+                      className="h-8.5 px-3 text-xs font-semibold gap-1.5 text-primary hover:bg-primary/10 border-primary/20 shrink-0 shadow-2xs rounded-lg"
+                    >
+                      <Eye className="h-3.5 w-3.5" />
+                      <span>Inspect</span>
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* 2. DESKTOP/TABLET TABLE VIEW (md:block) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full min-w-[950px] text-left text-xs">
+                <thead className="bg-muted/40 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border font-bold">
+                  <tr>
+                    <th className="px-4 py-3 whitespace-nowrap">Order Details</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Customer Identity</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Purchased Items</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Total Cost</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Payment</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Fulfillment Status</th>
+                    <th className="px-4 py-3 text-right whitespace-nowrap">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-border/60">
+                  {filteredOrders.map((order) => (
+                    <tr
+                      key={order.id}
+                      className="hover:bg-muted/30 transition-colors"
+                    >
+                      {/* Order ID & Date */}
+                      <td className="px-4 py-3.5 whitespace-nowrap">
+                        <span className="font-mono font-bold text-foreground text-xs block">
+                          #{order.id.slice(0, 8)}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground flex items-center gap-1 mt-0.5">
+                          <Calendar className="h-3 w-3" />
+                          {new Date(order.createdAt).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </span>
+                      </td>
+
+                      {/* Customer */}
+                      <td className="px-4 py-3.5">
+                        <div className="flex items-center gap-2">
+                          <div className="h-7 w-7 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center text-[10px] shrink-0">
+                            {order.customer?.name
+                              ? order.customer.name.slice(0, 2).toUpperCase()
+                              : "CU"}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="font-bold text-foreground text-xs truncate max-w-[140px]">
+                              {order.customer?.name || "Customer User"}
+                            </p>
+                            <p className="text-[10px] text-muted-foreground truncate max-w-[140px]">
+                              {order.customer?.email}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Items */}
+                      <td className="px-4 py-3.5">
+                        <div className="space-y-1">
+                          {order.orderItems?.slice(0, 2).map((item: any, i: number) => (
+                            <div
+                              key={i}
+                              className="text-foreground font-medium flex items-center gap-1.5"
+                            >
+                              <span className="font-bold text-primary">
+                                {item.quantity}x
+                              </span>
+                              <span className="truncate max-w-[140px]">
+                                {item.product?.name || "Product Item"}
+                              </span>
+                            </div>
+                          ))}
+                          {(order.orderItems?.length || 0) > 2 && (
+                            <span className="text-[10px] text-muted-foreground italic">
+                              +{order.orderItems.length - 2} more item(s)
+                            </span>
+                          )}
+                        </div>
+                      </td>
+
+                      {/* Total Cost */}
+                      <td className="px-4 py-3.5 whitespace-nowrap">
+                        <span className="font-mono font-black text-foreground text-sm">
+                          ${Number(order.totalAmount || 0).toLocaleString()}
+                        </span>
+                      </td>
+
+                      {/* Payment Status */}
+                      <td className="px-4 py-3.5 whitespace-nowrap">
+                        <div className="flex flex-col gap-1">
+                          <span className="font-semibold text-foreground uppercase tracking-wider text-[10px]">
+                            {order.payment?.paymentMethod || order.payments?.[0]?.paymentMethod || "BKASH"}
+                          </span>
+                          <div>{getPaymentBadge(order)}</div>
+                        </div>
+                      </td>
+
+                      {/* Status Changer Dropdown */}
+                      <td className="px-4 py-3.5 whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          <select
+                            value={order.status}
+                            disabled={updateStatusMutation.isPending}
+                            onChange={(e) =>
+                              updateStatusMutation.mutate({
+                                id: order.id,
+                                status: e.target.value,
+                              })
+                            }
+                            className="h-8 rounded-lg border border-input bg-background px-2.5 py-1 text-xs font-semibold shadow-xs focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring"
+                          >
+                            <option value="PENDING">PENDING</option>
+                            <option value="CONFIRMED">CONFIRMED</option>
+                            <option value="PROCESSING">PROCESSING</option>
+                            <option value="SHIPPED">SHIPPED</option>
+                            <option value="DELIVERED">DELIVERED</option>
+                            <option value="CANCELLED">CANCELLED</option>
+                          </select>
+                          <div>{getStatusBadge(order.status)}</div>
+                        </div>
+                      </td>
+
+                      {/* Actions */}
+                      <td className="px-4 py-3.5 text-right whitespace-nowrap">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setSelectedOrderModal(order)}
+                          className="h-8 gap-1.5 text-xs text-primary font-semibold hover:bg-primary/10"
+                        >
+                          <Eye className="h-3.5 w-3.5" />
+                          <span>Inspect</span>
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 

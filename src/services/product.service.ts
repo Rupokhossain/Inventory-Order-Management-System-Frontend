@@ -5,8 +5,8 @@ import { Product, Category, ProductFilterParams } from "@/types/product";
 export const productService = {
   async getProducts(params?: ProductFilterParams): Promise<{ data: Product[] }> {
     try {
-      let sortBy = "createdAt";
-      let sortOrder: "asc" | "desc" = "desc";
+      let sortBy = params?.sortBy || "createdAt";
+      let sortOrder: "asc" | "desc" = params?.sortOrder || "desc";
 
       if (params?.sortBy === "price_asc") {
         sortBy = "price";
@@ -14,20 +14,24 @@ export const productService = {
       } else if (params?.sortBy === "price_desc") {
         sortBy = "price";
         sortOrder = "desc";
-      } else {
-        sortBy = "createdAt";
-        sortOrder = "desc";
+      } else if (params?.sortBy === "name" || params?.sortBy === "price" || params?.sortBy === "createdAt") {
+        sortBy = params.sortBy;
+        sortOrder = params?.sortOrder || (params.sortBy === "name" ? "asc" : "desc");
       }
+
+      const searchTerm = params?.searchTerm || (params as any)?.search;
 
       const res = await apiClient<any>("/products", {
         method: "GET",
         query: {
-          searchTerm: params?.searchTerm || undefined,
-          categoryId: params?.categoryId || undefined,
+          search: searchTerm ? String(searchTerm).trim() : undefined,
+          searchTerm: searchTerm ? String(searchTerm).trim() : undefined,
+          categoryId: params?.categoryId && params.categoryId !== "all" ? params.categoryId : undefined,
+          category: params?.categoryId && params.categoryId !== "all" ? params.categoryId : undefined,
           sortBy: sortBy,
           sortOrder: sortOrder,
           page: params?.page || 1,
-          limit: params?.limit || 50,
+          limit: params?.limit || 100,
         },
       });
 
@@ -53,10 +57,13 @@ export const productService = {
         method: "GET",
         query: { limit: 100 },
       });
-      return Array.isArray(res?.data)
-        ? res.data
-        : res?.data?.data || res?.data?.result || [];
+      if (Array.isArray(res)) return res;
+      if (Array.isArray(res?.data)) return res.data;
+      if (Array.isArray(res?.data?.data)) return res.data.data;
+      if (Array.isArray(res?.result)) return res.result;
+      return [];
     } catch (error) {
+      console.error("Error fetching categories:", error);
       return [];
     }
   },

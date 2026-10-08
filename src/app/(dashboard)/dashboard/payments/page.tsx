@@ -104,55 +104,55 @@ export default function CustomerPaymentsPage() {
       {/* KPI Cards Row (Invenza 3-Card Style) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* Total Settled */}
-        <div className="p-4 sm:p-5 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between">
-          <div className="space-y-1">
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+        <div className="p-4 sm:p-5 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between min-w-0">
+          <div className="space-y-1 min-w-0">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block truncate">
               Total Settled Volume
             </span>
-            <div className="text-2xl font-black text-foreground">
+            <div className="text-xl sm:text-2xl font-black text-foreground truncate">
               ${totalPaid.toLocaleString(undefined, { minimumFractionDigits: 2 })}
             </div>
-            <span className="text-[11px] font-medium text-emerald-600 flex items-center gap-1">
-              <ShieldCheck className="h-3 w-3" /> Secure Gateway Verified
+            <span className="text-[11px] font-medium text-emerald-600 flex items-center gap-1 truncate">
+              <ShieldCheck className="h-3 w-3 shrink-0" /> Secure Gateway Verified
             </span>
           </div>
-          <div className="h-11 w-11 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold">
+          <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold shrink-0">
             <Wallet className="h-5 w-5" />
           </div>
         </div>
 
         {/* Successful Transactions */}
-        <div className="p-4 sm:p-5 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between">
-          <div className="space-y-1">
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+        <div className="p-4 sm:p-5 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between min-w-0">
+          <div className="space-y-1 min-w-0">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block truncate">
               Cleared Transactions
             </span>
-            <div className="text-2xl font-black text-foreground">
+            <div className="text-xl sm:text-2xl font-black text-foreground truncate">
               {paidCount} Settled
             </div>
-            <span className="text-[11px] font-medium text-blue-600 flex items-center gap-1">
-              <CheckCircle2 className="h-3 w-3" /> 100% Reconciliation
+            <span className="text-[11px] font-medium text-blue-600 flex items-center gap-1 truncate">
+              <CheckCircle2 className="h-3 w-3 shrink-0" /> 100% Reconciliation
             </span>
           </div>
-          <div className="h-11 w-11 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center font-bold">
+          <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center font-bold shrink-0">
             <CheckCircle2 className="h-5 w-5" />
           </div>
         </div>
 
         {/* Pending Attempts */}
-        <div className="p-4 sm:p-5 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between">
-          <div className="space-y-1">
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+        <div className="p-4 sm:p-5 rounded-xl bg-card border border-border/80 shadow-xs flex items-center justify-between min-w-0">
+          <div className="space-y-1 min-w-0">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block truncate">
               Pending / Unverified
             </span>
-            <div className="text-2xl font-black text-foreground">
+            <div className="text-xl sm:text-2xl font-black text-foreground truncate">
               {pendingCount} Pending
             </div>
-            <span className="text-[11px] font-medium text-amber-600 flex items-center gap-1">
-              <Clock className="h-3 w-3" /> Awaiting callback
+            <span className="text-[11px] font-medium text-amber-600 flex items-center gap-1 truncate">
+              <Clock className="h-3 w-3 shrink-0" /> Awaiting callback
             </span>
           </div>
-          <div className="h-11 w-11 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center font-bold">
+          <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center font-bold shrink-0">
             <Clock className="h-5 w-5" />
           </div>
         </div>
@@ -170,9 +170,9 @@ export default function CustomerPaymentsPage() {
             <button
               key={tab.id}
               onClick={() => setFilterStatus(tab.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
                 filterStatus === tab.id
-                  ? "bg-primary text-primary-foreground shadow-xs"
+                  ? "bg-primary text-primary-foreground shadow-xs font-bold"
                   : "text-muted-foreground hover:bg-muted/70 hover:text-foreground"
               }`}
             >
@@ -192,7 +192,7 @@ export default function CustomerPaymentsPage() {
         </div>
       </div>
 
-      {/* Ledger Table */}
+      {/* Ledger Table / Mobile Cards */}
       <div className="bg-card rounded-xl border border-border shadow-xs overflow-hidden">
         {isLoading ? (
           <div className="p-12 text-center space-y-3">
@@ -214,36 +214,24 @@ export default function CustomerPaymentsPage() {
             </div>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-muted/40 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border font-bold">
-                <tr>
-                  <th className="px-4 py-3">Transaction ID (TrxID)</th>
-                  <th className="px-4 py-3">Order Ref</th>
-                  <th className="px-4 py-3">Gateway</th>
-                  <th className="px-4 py-3">Amount</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">Timestamp</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border/60">
-                {filteredPayments.map((payment) => {
-                  const trxId =
-                    payment.transactionId ||
-                    `TRX-${payment.id.slice(0, 10).toUpperCase()}`;
-                  return (
-                    <tr
-                      key={payment.id}
-                      className="hover:bg-muted/30 transition-colors"
-                    >
-                      {/* TrxID with copy */}
-                      <td className="px-4 py-3.5">
+          <>
+            {/* Mobile Cards View (md:hidden) */}
+            <div className="md:hidden divide-y divide-border/60">
+              {filteredPayments.map((payment) => {
+                const trxId =
+                  payment.transactionId ||
+                  `TRX-${payment.id.slice(0, 10).toUpperCase()}`;
+
+                return (
+                  <div key={payment.id} className="p-4 space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
                         <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-foreground">
-                          <span>{trxId}</span>
+                          <span className="truncate">{trxId}</span>
                           <button
                             onClick={() => copyToClipboard(trxId)}
                             title="Copy Transaction ID"
-                            className="p-1 text-muted-foreground hover:text-foreground rounded transition-colors"
+                            className="p-1 text-muted-foreground hover:text-foreground rounded transition-colors shrink-0"
                           >
                             {copiedId === trxId ? (
                               <Check className="h-3 w-3 text-emerald-500" />
@@ -255,66 +243,166 @@ export default function CustomerPaymentsPage() {
                         <span className="text-[10px] text-muted-foreground">
                           Payment #{payment.id.slice(0, 8)}
                         </span>
-                      </td>
+                      </div>
+                      <div className="shrink-0">
+                        {payment.status === "PAID" ? (
+                          <Badge className="bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 font-semibold px-2 py-0.5 text-[10px]">
+                            <CheckCircle2 className="h-3 w-3 mr-1" /> Settled
+                          </Badge>
+                        ) : payment.status === "FAILED" ? (
+                          <Badge className="bg-rose-500/10 text-rose-600 border border-rose-500/20 font-semibold px-2 py-0.5 text-[10px]">
+                            <AlertCircle className="h-3 w-3 mr-1" /> Failed
+                          </Badge>
+                        ) : (
+                          <Badge className="bg-amber-500/10 text-amber-600 border border-amber-500/20 font-semibold px-2 py-0.5 text-[10px]">
+                            <Clock className="h-3 w-3 mr-1" /> Pending
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
 
-                      {/* Order Ref */}
-                      <td className="px-4 py-3.5">
+                    <div className="bg-muted/30 p-2.5 rounded-lg border border-border/50 text-xs space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] uppercase font-bold text-muted-foreground">Amount</span>
+                        <span className="font-bold text-foreground text-sm font-mono">
+                          ${Number(payment.amount || 0).toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] uppercase font-bold text-muted-foreground">Gateway</span>
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-pink-500/10 text-pink-600 border border-pink-500/20">
+                          {payment.paymentGateway || "bKash Sandbox"}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between pt-1 border-t border-border/40">
+                        <span className="text-[10px] uppercase font-bold text-muted-foreground">Order Ref</span>
                         <Link
                           href="/dashboard/orders"
-                          className="font-mono font-medium text-primary hover:underline flex items-center gap-1"
+                          className="font-mono font-medium text-primary hover:underline flex items-center gap-1 text-xs"
                         >
                           #{payment.orderId.slice(0, 8)}
                           <ArrowUpRight className="h-3 w-3" />
                         </Link>
-                      </td>
+                      </div>
+                    </div>
 
-                      {/* Gateway */}
-                      <td className="px-4 py-3.5">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-pink-500/10 text-pink-600 border border-pink-500/20">
-                          {payment.paymentGateway || "bKash Sandbox"}
-                        </span>
-                      </td>
+                    <div className="text-[10px] text-muted-foreground">
+                      {new Date(payment.createdAt).toLocaleString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
 
-                      {/* Amount */}
-                      <td className="px-4 py-3.5">
-                        <span className="font-bold text-foreground text-sm font-mono">
-                          ${Number(payment.amount || 0).toFixed(2)}
-                        </span>
-                      </td>
+            {/* Desktop Table View (hidden md:block) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left text-xs min-w-[760px]">
+                <thead className="bg-muted/40 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border font-bold">
+                  <tr>
+                    <th className="px-4 py-3 whitespace-nowrap">Transaction ID (TrxID)</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Order Ref</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Gateway</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Amount</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Status</th>
+                    <th className="px-4 py-3 whitespace-nowrap">Timestamp</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border/60">
+                  {filteredPayments.map((payment) => {
+                    const trxId =
+                      payment.transactionId ||
+                      `TRX-${payment.id.slice(0, 10).toUpperCase()}`;
+                    return (
+                      <tr
+                        key={payment.id}
+                        className="hover:bg-muted/30 transition-colors"
+                      >
+                        {/* TrxID with copy */}
+                        <td className="px-4 py-3.5 whitespace-nowrap">
+                          <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-foreground">
+                            <span>{trxId}</span>
+                            <button
+                              onClick={() => copyToClipboard(trxId)}
+                              title="Copy Transaction ID"
+                              className="p-1 text-muted-foreground hover:text-foreground rounded transition-colors"
+                            >
+                              {copiedId === trxId ? (
+                                <Check className="h-3 w-3 text-emerald-500" />
+                              ) : (
+                                <Copy className="h-3 w-3" />
+                              )}
+                            </button>
+                          </div>
+                          <span className="text-[10px] text-muted-foreground">
+                            Payment #{payment.id.slice(0, 8)}
+                          </span>
+                        </td>
 
-                      {/* Status */}
-                      <td className="px-4 py-3.5">
-                        {payment.status === "PAID" ? (
-                          <Badge className="bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 font-semibold px-2 py-0.5">
-                            <CheckCircle2 className="h-3 w-3 mr-1" /> Settled
-                          </Badge>
-                        ) : payment.status === "FAILED" ? (
-                          <Badge className="bg-rose-500/10 text-rose-600 border border-rose-500/20 font-semibold px-2 py-0.5">
-                            <AlertCircle className="h-3 w-3 mr-1" /> Failed
-                          </Badge>
-                        ) : (
-                          <Badge className="bg-amber-500/10 text-amber-600 border border-amber-500/20 font-semibold px-2 py-0.5">
-                            <Clock className="h-3 w-3 mr-1" /> Pending
-                          </Badge>
-                        )}
-                      </td>
+                        {/* Order Ref */}
+                        <td className="px-4 py-3.5 whitespace-nowrap">
+                          <Link
+                            href="/dashboard/orders"
+                            className="font-mono font-medium text-primary hover:underline flex items-center gap-1"
+                          >
+                            #{payment.orderId.slice(0, 8)}
+                            <ArrowUpRight className="h-3 w-3" />
+                          </Link>
+                        </td>
 
-                      {/* Date */}
-                      <td className="px-4 py-3.5 text-muted-foreground text-[11px]">
-                        {new Date(payment.createdAt).toLocaleString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                        {/* Gateway */}
+                        <td className="px-4 py-3.5 whitespace-nowrap">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-pink-500/10 text-pink-600 border border-pink-500/20">
+                            {payment.paymentGateway || "bKash Sandbox"}
+                          </span>
+                        </td>
+
+                        {/* Amount */}
+                        <td className="px-4 py-3.5 whitespace-nowrap">
+                          <span className="font-bold text-foreground text-sm font-mono">
+                            ${Number(payment.amount || 0).toFixed(2)}
+                          </span>
+                        </td>
+
+                        {/* Status */}
+                        <td className="px-4 py-3.5 whitespace-nowrap">
+                          {payment.status === "PAID" ? (
+                            <Badge className="bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 font-semibold px-2 py-0.5">
+                              <CheckCircle2 className="h-3 w-3 mr-1" /> Settled
+                            </Badge>
+                          ) : payment.status === "FAILED" ? (
+                            <Badge className="bg-rose-500/10 text-rose-600 border border-rose-500/20 font-semibold px-2 py-0.5">
+                              <AlertCircle className="h-3 w-3 mr-1" /> Failed
+                            </Badge>
+                          ) : (
+                            <Badge className="bg-amber-500/10 text-amber-600 border border-amber-500/20 font-semibold px-2 py-0.5">
+                              <Clock className="h-3 w-3 mr-1" /> Pending
+                            </Badge>
+                          )}
+                        </td>
+
+                        {/* Date */}
+                        <td className="px-4 py-3.5 text-muted-foreground text-[11px] whitespace-nowrap">
+                          {new Date(payment.createdAt).toLocaleString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </div>

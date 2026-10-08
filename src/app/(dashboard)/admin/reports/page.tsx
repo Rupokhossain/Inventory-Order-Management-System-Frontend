@@ -76,33 +76,33 @@ export default function AdminReportsPage() {
       </div>
 
       {/* Report Summary Card */}
-      <div className="p-6 sm:p-8 rounded-xl bg-card border border-border/80 shadow-xs space-y-6">
-        <div className="flex items-center justify-between border-b border-border pb-4">
+      <div className="p-4 sm:p-8 rounded-xl bg-card border border-border/80 shadow-xs space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-4">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground font-black">
+            <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground font-black shrink-0">
               <ShieldCheck className="h-6 w-6" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-foreground">
+              <h2 className="text-sm sm:text-base font-bold text-foreground">
                 IOMS Enterprise Operational Audit Summary
               </h2>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-[11px] sm:text-xs text-muted-foreground">
                 Period: Current Operating Cycle • Real-Time Database Sync
               </p>
             </div>
           </div>
-          <Badge className="bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-xs font-semibold">
+          <Badge className="bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-xs font-semibold self-start sm:self-auto">
             Status: Fully Reconciled
           </Badge>
         </div>
 
         {/* 4 Performance Indicators */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-xl bg-muted/30 border border-border/60 text-xs">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 p-3.5 sm:p-4 rounded-xl bg-muted/30 border border-border/60 text-xs">
           <div>
             <span className="text-[10px] uppercase font-bold text-muted-foreground">
               Gross Revenue
             </span>
-            <p className="text-lg font-black text-foreground font-mono mt-0.5">
+            <p className="text-base sm:text-lg font-black text-foreground font-mono mt-0.5 truncate">
               ${totalGrossRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
             </p>
           </div>
@@ -111,7 +111,7 @@ export default function AdminReportsPage() {
             <span className="text-[10px] uppercase font-bold text-muted-foreground">
               Stock Asset Value
             </span>
-            <p className="text-lg font-black text-foreground font-mono mt-0.5">
+            <p className="text-base sm:text-lg font-black text-foreground font-mono mt-0.5 truncate">
               ${totalStockValuation.toLocaleString(undefined, { minimumFractionDigits: 0 })}
             </p>
           </div>
@@ -120,7 +120,7 @@ export default function AdminReportsPage() {
             <span className="text-[10px] uppercase font-bold text-muted-foreground">
               Total Dispatches
             </span>
-            <p className="text-lg font-black text-foreground font-mono mt-0.5">
+            <p className="text-base sm:text-lg font-black text-foreground font-mono mt-0.5 truncate">
               {orders.length} Orders
             </p>
           </div>
@@ -129,7 +129,7 @@ export default function AdminReportsPage() {
             <span className="text-[10px] uppercase font-bold text-muted-foreground">
               Fulfillment Rate
             </span>
-            <p className="text-lg font-black text-emerald-600 font-mono mt-0.5">
+            <p className="text-base sm:text-lg font-black text-emerald-600 font-mono mt-0.5 truncate">
               {deliverySuccessRate}%
             </p>
           </div>
@@ -140,8 +140,61 @@ export default function AdminReportsPage() {
           <h3 className="text-sm font-bold text-foreground">
             System & Governance Metrics
           </h3>
-          <div className="border border-border rounded-lg overflow-hidden text-xs">
-            <table className="w-full text-left">
+
+          {/* 1. Mobile Responsive Governance Cards (Phone Screens - 100% visible, never cut off) */}
+          <div className="grid grid-cols-1 sm:hidden gap-2.5">
+            {[
+              {
+                indicator: "Registered Platform Users",
+                scope: "All Tiers",
+                value: `${users.length} Accounts`,
+                status: "Verified",
+              },
+              {
+                indicator: "Active Catalog SKU Items",
+                scope: "Warehouse Central",
+                value: `${products.length} Unique SKUs`,
+                status: "In Stock",
+              },
+              {
+                indicator: "Payment Gateway Integration",
+                scope: "bKash Sandbox API & Tokenized PGW",
+                value: "Dual-Mode",
+                status: "Operational",
+              },
+              {
+                indicator: "Prisma ORM & PostgreSQL DB",
+                scope: "Relational Schema & Cascade Integrity",
+                value: "SSL Mode Full",
+                status: "Connected",
+              },
+            ].map((metric, idx) => (
+              <div
+                key={idx}
+                className="p-3.5 rounded-xl border border-border bg-muted/20 space-y-2 text-xs"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-bold text-foreground text-xs leading-tight">
+                    {metric.indicator}
+                  </span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 shrink-0">
+                    {metric.status}
+                  </span>
+                </div>
+                <div className="text-[11px] text-muted-foreground">
+                  Scope: {metric.scope}
+                </div>
+                <div className="pt-1.5 border-t border-border/50 flex items-center justify-between text-xs font-mono font-bold text-foreground">
+                  <span className="text-[10px] uppercase font-sans text-muted-foreground">Value</span>
+                  <span>{metric.value}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* 2. Desktop Responsive Table (Tablet & Large Screens) */}
+          <div className="hidden sm:block border border-border rounded-lg overflow-x-auto text-xs">
+            <table className="w-full text-left min-w-[540px]">
               <thead className="bg-muted/50 text-[10px] uppercase font-bold text-muted-foreground border-b border-border">
                 <tr>
                   <th className="px-4 py-2.5">Indicator</th>
@@ -200,7 +253,7 @@ export default function AdminReportsPage() {
           </div>
         </div>
 
-        <div className="pt-4 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
+        <div className="pt-4 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground text-center sm:text-left">
           <span>Generated by IOMS Enterprise Central Command Suite</span>
           <span>Timestamp: {new Date().toISOString()}</span>
         </div>
