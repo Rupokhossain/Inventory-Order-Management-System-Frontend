@@ -1,7 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ofetch } from "ofetch";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api/v1";
+const getBaseUrl = () => {
+  const raw = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api/v1";
+  const trimmed = raw.replace(/\/+$/, "");
+  return trimmed.endsWith("/api/v1") ? trimmed : `${trimmed}/api/v1`;
+};
+
+const API_BASE_URL = getBaseUrl();
 
 function getCookie(name: string): string | null {
   if (typeof document === "undefined") return null;
