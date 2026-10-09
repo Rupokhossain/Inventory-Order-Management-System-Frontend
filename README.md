@@ -17,9 +17,9 @@ An enterprise-grade, high-performance, full-stack eCommerce and inventory manage
 
 | Role | Email | Password | Access Highlights |
 | :--- | :--- | :--- | :--- |
-| **Admin** | `rh.siam999@gmail.com` | `siam11**##@@!!11A` | Full system governance, User Roles/Status, Analytics, Inventory, Reports |
-| **Manager** | `rh.siam999@gmail.com` | `siam11**##@@!!11A` | Product CRUD, Stock adjustments, Order fulfillment & status updates |
-| **Customer** | `siam121483@gmail.com` | `siam11**##@@AA` | Product browsing, Cart, Checkout, bKash Payment, Order tracking |
+| **Admin** | `rh.siam999@gmail.com` | `*******` | Full system governance, User Roles/Status, Analytics, Inventory, Reports |
+| **Manager** | `manager@ioms.com` | `*******` | Product CRUD, Stock adjustments, Order fulfillment & status updates |
+| **Customer** | `siam121483@gmail.com` | `*******` | Product browsing, Cart, Checkout, bKash Payment, Order tracking |
 
 *(Note: You can also use one-click **Google Sign-In** on the login or register page to explore as a Customer).*
 
